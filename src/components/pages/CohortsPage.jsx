@@ -3,30 +3,7 @@ import { Users, Plus, Trash2, Edit2, Save, X, GraduationCap, Hash } from "lucide
 
 // Mock context for demonstration
 const mockCohorts = [
-  {
-    id: 1,
-    name: "CS Year 1",
-    size: 45,
-    program: "Computer Science",
-    year: 1,
-    semester: "Fall 2024"
-  },
-  {
-    id: 2,
-    name: "CS Year 2",
-    size: 35,
-    program: "Computer Science",
-    year: 2,
-    semester: "Fall 2024"
-  },
-  {
-    id: 3,
-    name: "BBA Year 1",
-    size: 28,
-    program: "Business Administration",
-    year: 1,
-    semester: "Fall 2024"
-  }
+  
 ];
 
 function CohortForm({ onSave, editingCohort = null, onCancel = null }) {
@@ -119,7 +96,7 @@ function CohortForm({ onSave, editingCohort = null, onCancel = null }) {
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
               style={{
-                width: '100%',
+                width: '90%',
                 padding: '12px 16px',
                 border: '1px solid #d1d5db',
                 borderRadius: '8px',
@@ -155,7 +132,7 @@ function CohortForm({ onSave, editingCohort = null, onCancel = null }) {
               value={formData.size}
               onChange={(e) => setFormData(prev => ({ ...prev, size: e.target.value }))}
               style={{
-                width: '100%',
+                width: '90%',
                 padding: '12px 16px',
                 border: '1px solid #d1d5db',
                 borderRadius: '8px',
@@ -192,7 +169,7 @@ function CohortForm({ onSave, editingCohort = null, onCancel = null }) {
               value={formData.program}
               onChange={(e) => setFormData(prev => ({ ...prev, program: e.target.value }))}
               style={{
-                width: '100%',
+                width: '90%',
                 padding: '12px 16px',
                 border: '1px solid #d1d5db',
                 borderRadius: '8px',
@@ -227,7 +204,7 @@ function CohortForm({ onSave, editingCohort = null, onCancel = null }) {
               value={formData.year}
               onChange={(e) => setFormData(prev => ({ ...prev, year: e.target.value }))}
               style={{
-                width: '100%',
+                width: '90%',
                 padding: '12px 16px',
                 border: '1px solid #d1d5db',
                 borderRadius: '8px',
@@ -263,7 +240,7 @@ function CohortForm({ onSave, editingCohort = null, onCancel = null }) {
               value={formData.semester}
               onChange={(e) => setFormData(prev => ({ ...prev, semester: e.target.value }))}
               style={{
-                width: '100%',
+                width: '90%',
                 padding: '12px 16px',
                 border: '1px solid #d1d5db',
                 borderRadius: '8px',
@@ -282,10 +259,10 @@ function CohortForm({ onSave, editingCohort = null, onCancel = null }) {
               }}
             >
               <option value="">Select semester</option>
-              <option value="Fall 2024">Fall 2024</option>
-              <option value="Spring 2025">Spring 2025</option>
-              <option value="Summer 2025">Summer 2025</option>
-              <option value="Fall 2025">Fall 2025</option>
+              <option value="Year 1">Year 1</option>
+              <option value="Year 2">Year 2</option>
+              <option value="Year 3">Year 3</option>
+              <option value="Year 4">Year 4</option>
             </select>
           </div>
         </div>

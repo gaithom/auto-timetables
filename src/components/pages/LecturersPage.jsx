@@ -3,30 +3,7 @@ import { User, Clock, BookOpen, Plus, Trash2, Edit2, Save, X } from "lucide-reac
 
 // Mock context for demonstration
 const mockLecturers = [
-  {
-    id: 1,
-    name: "Dr. Jane Doe",
-    courses: ["CS101", "CS102"],
-    availability: {
-      monday: ["08:00-09:00", "10:00-11:00", "14:00-15:00"],
-      tuesday: ["09:00-10:00", "11:00-12:00"],
-      wednesday: ["08:00-09:00", "13:00-14:00", "15:00-16:00"],
-      thursday: ["10:00-11:00", "12:00-13:00"],
-      friday: ["09:00-10:00", "14:00-15:00"]
-    }
-  },
-  {
-    id: 2,
-    name: "Mr. John Smith",
-    courses: ["CS201", "CS102"],
-    availability: {
-      monday: ["09:00-10:00", "11:00-12:00"],
-      tuesday: ["08:00-09:00", "14:00-15:00"],
-      wednesday: ["10:00-11:00", "12:00-13:00"],
-      thursday: ["09:00-10:00", "15:00-16:00"],
-      friday: ["08:00-09:00", "11:00-12:00"]
-    }
-  }
+
 ];
 
 const timeSlots = [
@@ -129,7 +106,7 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
               style={{
-                width: '100%',
+                width: '70%',
                 padding: '12px 16px',
                 border: '1px solid #d1d5db',
                 borderRadius: '8px',
@@ -165,7 +142,7 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
               value={formData.courses}
               onChange={(e) => setFormData(prev => ({ ...prev, courses: e.target.value }))}
               style={{
-                width: '100%',
+                width: '70%',
                 padding: '12px 16px',
                 border: '1px solid #d1d5db',
                 borderRadius: '8px',
