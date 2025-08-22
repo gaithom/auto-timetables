@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, { createContext, useContext, useMemo, useState, useCallback } from "react";
 import { v4 as uuid } from "uuid";
 import { DAYS, SLOTS, generateTimetable } from "../utils/timetableGenerator";
 import sample from "../data/sampleData";
@@ -19,10 +19,10 @@ export function TimetableProvider({ children }) {
 
   const removeById = (setter) => (id) => setter((arr) => arr.filter((x) => x.id !== id));
 
-  const regenerate = () => {
+  const regenerate = useCallback(() => {
     const next = generateTimetable({ programs, lecturers, cohorts, rooms });
     setTimetable(next);
-  };
+  }, [programs, lecturers, cohorts, rooms]);
 
   const value = useMemo(
     () => ({
@@ -43,7 +43,7 @@ export function TimetableProvider({ children }) {
       removeRoom: removeById(setRooms),
       regenerate,
     }),
-    [programs, lecturers, cohorts, rooms, timetable]
+    [programs, lecturers, cohorts, rooms, timetable, regenerate]
   );
 
   return <TimetableContext.Provider value={value}>{children}</TimetableContext.Provider>;
