@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Plus, GraduationCap } from "lucide-react";
+import { Plus, GraduationCap, Edit2, Trash2, Power, Save, X } from "lucide-react";
 
-// Enhanced ProgramForm component with full functionality
+// Enhanced ProgramForm component with dark theme
 function ProgramForm({ isOpen, onClose, program = null, onSave }) {
   const [formData, setFormData] = useState({
     name: program?.name || '',
@@ -33,8 +33,6 @@ function ProgramForm({ isOpen, onClose, program = null, onSave }) {
   }, [program]);
 
   const handleSubmit = () => {
-    console.log('Submit button clicked with data:', formData); // Debug log
-    
     if (!formData.name.trim() || !formData.code.trim() || !formData.department.trim() || !formData.duration.trim()) {
       alert('Please fill in all fields');
       return;
@@ -49,8 +47,6 @@ function ProgramForm({ isOpen, onClose, program = null, onSave }) {
       id: program ? program.id : Date.now(),
       courses: program ? program.courses : []
     };
-
-    console.log('Saving program:', programData); // Debug log
     
     // Call the save function passed from parent
     onSave(programData, !!program);
@@ -76,165 +72,111 @@ function ProgramForm({ isOpen, onClose, program = null, onSave }) {
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 50
     }}>
-      <div style={{
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        padding: '24px',
-        width: '400px',
-        maxWidth: '90vw'
-      }}>
-        <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px' }}>
+      <div className="form-container" style={{ width: '400px', maxWidth: '90vw' }}>
+        <h3 style={{ 
+          fontSize: '20px', 
+          fontWeight: '600', 
+          marginBottom: '24px', 
+          color: '#e0e0e0',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            backgroundColor: '#2d5a27',
+            borderRadius: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <GraduationCap style={{ width: '20px', height: '20px', color: '#4caf50' }} />
+          </div>
           {program ? 'Edit Program' : 'Add New Program'}
         </h3>
         
-        <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
-            Program Name *
-          </label>
+        <div className="form-group">
+          <label>Program Name *</label>
           <input 
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             placeholder="e.g., Computer Science"
-            style={{
-              width: '100%',
-              padding: '8px 12px',
-              border: '1px solid #d1d5db',
-              borderRadius: '4px',
-              fontSize: '14px',
-              boxSizing: 'border-box'
-            }}
             required
           />
         </div>
 
-        <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
-            Program Code *
-          </label>
+        <div className="form-group">
+          <label>Program Code *</label>
           <input 
             type="text"
             name="code"
             value={formData.code}
             onChange={handleChange}
             placeholder="e.g., CS"
-            style={{
-              width: '100%',
-              padding: '8px 12px',
-              border: '1px solid #d1d5db',
-              borderRadius: '4px',
-              fontSize: '14px',
-              boxSizing: 'border-box'
-            }}
             required
           />
         </div>
 
-        <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
-            Department *
-          </label>
+        <div className="form-group">
+          <label>Department *</label>
           <input 
             type="text"
             name="department"
             value={formData.department}
             onChange={handleChange}
             placeholder="e.g., School of Computing"
-            style={{
-              width: '100%',
-              padding: '8px 12px',
-              border: '1px solid #d1d5db',
-              borderRadius: '4px',
-              fontSize: '14px',
-              boxSizing: 'border-box'
-            }}
             required
           />
         </div>
 
-        <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
-            Duration *
-          </label>
+        <div className="form-group">
+          <label>Duration *</label>
           <input 
             type="text"
             name="duration"
             value={formData.duration}
             onChange={handleChange}
             placeholder="e.g., 8 semesters"
-            style={{
-              width: '100%',
-              padding: '8px 12px',
-              border: '1px solid #d1d5db',
-              borderRadius: '4px',
-              fontSize: '14px',
-              boxSizing: 'border-box'
-            }}
             required
           />
         </div>
 
-        <div style={{ marginBottom: '24px' }}>
-          <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: '500' }}>
-            Status
-          </label>
+        <div className="form-group">
+          <label>Status</label>
           <select 
             name="status"
             value={formData.status}
             onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '8px 12px',
-              border: '1px solid #d1d5db',
-              borderRadius: '4px',
-              fontSize: '14px',
-              boxSizing: 'border-box'
-            }}
           >
             <option value="Active">Active</option>
             <option value="Inactive">Inactive</option>
           </select>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+        <div className="form-actions">
           <button 
             type="button"
             onClick={onClose}
-            style={{
-              padding: '8px 16px',
-              color: '#6b7280',
-              border: '1px solid #d1d5db',
-              borderRadius: '4px',
-              background: 'white',
-              cursor: 'pointer',
-              fontSize: '14px'
-            }}
+            className="btn btn-secondary"
           >
+            <X style={{ width: '16px', height: '16px' }} />
             Cancel
           </button>
           <button 
             type="button"
             onClick={handleSubmit}
-            style={{
-              padding: '8px 16px',
-              background: '#2563eb',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: '500'
-            }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = '#1d4ed8'}
-            onMouseLeave={(e) => e.target.style.backgroundColor = '#2563eb'}
+            className="btn btn-primary"
           >
+            <Save style={{ width: '16px', height: '16px' }} />
             {program ? 'Update Program' : 'Add Program'}
           </button>
         </div>
@@ -244,18 +186,32 @@ function ProgramForm({ isOpen, onClose, program = null, onSave }) {
 }
 
 export default function ProgramsPage() {
-  // In your actual implementation, replace this with:
-  // const { programs, addProgram, updateProgram, removeProgram } = useTimetable();
-  
-  // Mock data for demonstration - replace with your actual context data
+  // Mock data for demonstration
   const [programs, setPrograms] = useState([
-   
+    {
+      id: 1,
+      name: "Computer Science",
+      code: "CS101",
+      department: "School of Computing",
+      duration: "4 years",
+      status: "Active",
+      courses: []
+    },
+    {
+      id: 2,
+      name: "Electrical Engineering",
+      code: "EE202",
+      department: "School of Engineering",
+      duration: "4 years",
+      status: "Active",
+      courses: []
+    }
   ]);
 
   const [showForm, setShowForm] = useState(false);
   const [editingProgram, setEditingProgram] = useState(null);
 
-  // Mock functions - replace these with your actual TimetableContext functions
+  // Mock functions
   const addProgram = (programData) => {
     setPrograms(prev => [...prev, { ...programData, id: Date.now() }]);
   };
@@ -299,146 +255,167 @@ export default function ProgramsPage() {
     setEditingProgram(null);
   };
 
+  // Statistics
+  const activePrograms = programs.filter(p => p.status === 'Active').length;
+  const inactivePrograms = programs.filter(p => p.status === 'Inactive').length;
+
   return (
-    <div style={{ background: 'white', minHeight: '100vh', margin: '-24px', padding: '24px' }}>
-      {/* Header */}
-      <div className="mb-6">
-        <h1 style={{ fontSize: '28px', fontWeight: '700', color: '#1f2937', marginBottom: '8px' }}>Programs</h1>
-        <p style={{ color: '#6b7280', marginBottom: '16px' }}>Manage academic programs and degrees</p>
-        
-        {/* Add Program Button */}
+    <div className="page active">
+      <h1>Program Management</h1>
+      
+      {/* Statistics Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '32px' }}>
+        <div className="stat-card">
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#4caf50', marginBottom: '4px' }}>
+            {programs.length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#a0a0a0' }}>Total Programs</div>
+        </div>
+        <div className="stat-card">
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#4caf50', marginBottom: '4px' }}>
+            {activePrograms}
+          </div>
+          <div style={{ fontSize: '14px', color: '#a0a0a0' }}>Active Programs</div>
+        </div>
+        <div className="stat-card">
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#4caf50', marginBottom: '4px' }}>
+            {inactivePrograms}
+          </div>
+          <div style={{ fontSize: '14px', color: '#a0a0a0' }}>Inactive Programs</div>
+        </div>
+      </div>
+
+      {/* Add Program Button */}
+      <div style={{ marginBottom: '24px' }}>
         <button 
           onClick={() => setShowForm(true)}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            border: '1px solid #d1d5db',
-            color: '#374151',
-            padding: '6px 12px',
-            borderRadius: '6px',
-            fontSize: '14px',
-            background: 'white',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s ease'
-          }}
-          onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-          onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+          className="btn btn-primary"
+          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
         >
-          <Plus size={16} />
+          <Plus style={{ width: '16px', height: '16px' }} />
           Add Program
         </button>
       </div>
 
       {/* Programs List */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-        {programs.map((program) => (
-          <div key={program.id} style={{ borderBottom: '1px solid #e5e7eb', paddingBottom: '24px' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
-              <div style={{ marginTop: '4px' }}>
-                <GraduationCap style={{ width: '20px', height: '20px', color: '#9ca3af' }} />
-              </div>
-              
-              <div style={{ flex: 1 }}>
-                <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', marginBottom: '4px' }}>
-                  {program.name}
-                </h2>
-                <p style={{ color: '#6b7280', marginBottom: '8px' }}>Code: {program.code}</p>
-                
-                <p style={{ color: '#6b7280', marginBottom: '8px' }}>{program.status}</p>
-                
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#6b7280', marginBottom: '4px' }}>
-                  <GraduationCap style={{ width: '16px', height: '16px' }} />
-                  <span><strong>Department:</strong> {program.department}</span>
-                </div>
-                <p style={{ color: '#6b7280', marginBottom: '16px' }}>
-                  <strong>Duration:</strong> {program.duration}
-                </p>
-                
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button 
-                    onClick={() => handleEdit(program)}
-                    style={{
-                      padding: '6px 12px',
-                      fontSize: '14px',
-                      color: '#6b7280',
-                      border: '1px solid #d1d5db',
-                      borderRadius: '4px',
-                      background: 'white',
-                      cursor: 'pointer',
-                      transition: 'background-color 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#f9fafb'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
-                  >
-                    ✏️ Edit
-                  </button>
-                  
-                  {program.status === 'Active' ? (
-                    <button 
-                      onClick={() => toggleProgramStatus(program.id)}
-                      style={{
-                        padding: '6px 12px',
-                        fontSize: '14px',
-                        background: '#dc2626',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#b91c1c'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = '#dc2626'}
-                    >
-                      Deactivate
-                    </button>
-                  ) : (
-                    <button 
-                      onClick={() => toggleProgramStatus(program.id)}
-                      style={{
-                        padding: '6px 12px',
-                        fontSize: '14px',
-                        background: '#2563eb',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = '#1d4ed8'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = '#2563eb'}
-                    >
-                      Activate
-                    </button>
-                  )}
-                  
-                  <button 
-                    onClick={() => removeProgram(program.id)}
-                    style={{
-                      padding: '6px 12px',
-                      fontSize: '14px',
-                      background: '#dc2626',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      transition: 'background-color 0.2s ease',
-                      marginLeft: '4px'
-                    }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#b91c1c'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = '#dc2626'}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-              
-              <div style={{ marginTop: '16px' }}>
-                <GraduationCap style={{ width: '20px', height: '20px', color: '#9ca3af' }} />
-              </div>
+      <div className="form-container">
+        <h2>Program List</h2>
+        
+        {programs.length === 0 ? (
+          <div style={{
+            padding: '48px',
+            textAlign: 'center',
+            color: '#a0a0a0'
+          }}>
+            <div style={{
+              width: '64px',
+              height: '64px',
+              backgroundColor: '#2d5a27',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px auto'
+            }}>
+              <GraduationCap style={{ width: '32px', height: '32px', color: '#4caf50' }} />
             </div>
+            <h3 style={{
+              fontSize: '18px',
+              fontWeight: '500',
+              color: '#e0e0e0',
+              marginBottom: '8px'
+            }}>
+              No programs added yet
+            </h3>
+            <p style={{ margin: 0 }}>
+              Add your first program using the button above to get started.
+            </p>
           </div>
-        ))}
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {programs.map((program) => (
+              <div key={program.id} className="data-card">
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{
+                      width: '48px',
+                      height: '48px',
+                      background: 'linear-gradient(135deg, #2d5a27 0%, #3a7a33 100%)',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <GraduationCap style={{ width: '24px', height: '24px', color: 'white' }} />
+                    </div>
+                    <div>
+                      <h3 style={{
+                        fontSize: '18px',
+                        fontWeight: '600',
+                        color: '#e0e0e0',
+                        margin: '0 0 4px 0'
+                      }}>
+                        {program.name}
+                      </h3>
+                      <p style={{ color: '#a0a0a0', marginBottom: '8px' }}>Code: {program.code}</p>
+                      
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#a0a0a0' }}>
+                        <span><strong>Department:</strong> {program.department}</span>
+                        <span>•</span>
+                        <span><strong>Duration:</strong> {program.duration}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="action-buttons">
+                    <button
+                      onClick={() => handleEdit(program)}
+                      className="icon-btn"
+                      title="Edit program"
+                    >
+                      <Edit2 style={{ width: '16px', height: '16px' }} />
+                    </button>
+                    <button
+                      onClick={() => removeProgram(program.id)}
+                      className="icon-btn"
+                      title="Delete program"
+                    >
+                      <Trash2 style={{ width: '16px', height: '16px' }} />
+                    </button>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{
+                    padding: '4px 12px',
+                    borderRadius: '12px',
+                    backgroundColor: program.status === 'Active' ? 'rgba(76, 175, 80, 0.2)' : 'rgba(120, 120, 120, 0.2)',
+                    color: program.status === 'Active' ? '#4caf50' : '#a0a0a0',
+                    fontSize: '12px',
+                    fontWeight: '600'
+                  }}>
+                    {program.status}
+                  </div>
+                  
+                  <button 
+                    onClick={() => toggleProgramStatus(program.id)}
+                    className="btn btn-secondary"
+                    style={{ 
+                      padding: '6px 12px',
+                      fontSize: '14px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    <Power style={{ width: '14px', height: '14px' }} />
+                    {program.status === 'Active' ? 'Deactivate' : 'Activate'}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <ProgramForm 
@@ -449,4 +426,4 @@ export default function ProgramsPage() {
       />
     </div>
   );
-}
+}                                                                                 

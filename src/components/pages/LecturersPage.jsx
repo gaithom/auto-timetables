@@ -3,7 +3,30 @@ import { User, Clock, BookOpen, Plus, Trash2, Edit2, Save, X } from "lucide-reac
 
 // Mock context for demonstration
 const mockLecturers = [
-
+  {
+    id: 1,
+    name: "Dr. Jane Smith",
+    courses: ["Mathematics", "Calculus"],
+    availability: {
+      monday: ["08:00-09:00", "09:00-10:00"],
+      tuesday: ["10:00-11:00", "11:00-12:00"],
+      wednesday: [],
+      thursday: ["14:00-15:00", "15:00-16:00"],
+      friday: ["08:00-09:00", "13:00-14:00"]
+    }
+  },
+  {
+    id: 2,
+    name: "Prof. John Davis",
+    courses: ["Physics", "Advanced Physics"],
+    availability: {
+      monday: ["10:00-11:00", "11:00-12:00"],
+      tuesday: ["08:00-09:00", "09:00-10:00"],
+      wednesday: ["14:00-15:00", "15:00-16:00"],
+      thursday: [],
+      friday: ["10:00-11:00", "11:00-12:00"]
+    }
+  }
 ];
 
 const timeSlots = [
@@ -59,30 +82,23 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
   };
 
   return (
-    <div style={{
-      backgroundColor: 'white',
-      borderRadius: '12px',
-      boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
-      border: '1px solid #e5e7eb',
-      padding: '24px',
-      marginBottom: '32px'
-    }}>
+    <div className="form-container">
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
         <div style={{
           width: '40px',
           height: '40px',
-          backgroundColor: '#dbeafe',
+          backgroundColor: '#2d5a27',
           borderRadius: '8px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <Plus style={{ width: '20px', height: '20px', color: '#2563eb' }} />
+          <Plus style={{ width: '20px', height: '20px', color: '#4caf50' }} />
         </div>
         <h3 style={{
           fontSize: '20px',
           fontWeight: '600',
-          color: '#111827',
+          color: '#e0e0e0',
           margin: 0
         }}>
           {editingLecturer ? "Edit Lecturer" : "Add New Lecturer"}
@@ -90,75 +106,25 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
       </div>
 
       <div style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
-          <div>
-            <label style={{
-              display: 'block',
-              fontSize: '14px',
-              fontWeight: '500',
-              color: '#374151',
-              marginBottom: '8px'
-            }}>
-              Lecturer Name
-            </label>
+        <div className="form-grid">
+          <div className="form-group">
+            <label>Lecturer Name</label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-              style={{
-                width: '70%',
-                padding: '12px 16px',
-                border: '1px solid #d1d5db',
-                borderRadius: '8px',
-                fontSize: '14px',
-                outline: 'none',
-                transition: 'border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out'
-              }}
               placeholder="e.g., Dr. Jane Doe"
-              onFocus={(e) => {
-                e.target.style.borderColor = '#3b82f6';
-                e.target.style.boxShadow = '0 0 0 3px rgb(59 130 246 / 0.1)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = '#d1d5db';
-                e.target.style.boxShadow = 'none';
-              }}
               required
             />
           </div>
 
-          <div>
-            <label style={{
-              display: 'block',
-              fontSize: '14px',
-              fontWeight: '500',
-              color: '#374151',
-              marginBottom: '8px'
-            }}>
-              Courses Taught (comma-separated)
-            </label>
+          <div className="form-group">
+            <label>Courses Taught (comma-separated)</label>
             <input
               type="text"
               value={formData.courses}
               onChange={(e) => setFormData(prev => ({ ...prev, courses: e.target.value }))}
-              style={{
-                width: '70%',
-                padding: '12px 16px',
-                border: '1px solid #d1d5db',
-                borderRadius: '8px',
-                fontSize: '14px',
-                outline: 'none',
-                transition: 'border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out'
-              }}
               placeholder="CS101, CS102"
-              onFocus={(e) => {
-                e.target.style.borderColor = '#3b82f6';
-                e.target.style.boxShadow = '0 0 0 3px rgb(59 130 246 / 0.1)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = '#d1d5db';
-                e.target.style.boxShadow = 'none';
-              }}
             />
           </div>
         </div>
@@ -168,15 +134,16 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
             display: 'block',
             fontSize: '14px',
             fontWeight: '500',
-            color: '#374151',
+            color: '#e0e0e0',
             marginBottom: '16px'
           }}>
             Availability Schedule
           </label>
           <div style={{
-            backgroundColor: '#f9fafb',
+            backgroundColor: '#1a1a1a',
             borderRadius: '8px',
-            padding: '16px'
+            padding: '16px',
+            border: '1px solid #333'
           }}>
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -186,7 +153,7 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
                       textAlign: 'left',
                       fontSize: '14px',
                       fontWeight: '500',
-                      color: '#6b7280',
+                      color: '#a0a0a0',
                       padding: '8px 12px'
                     }}>Time</th>
                     {dayLabels.map(day => (
@@ -194,7 +161,7 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
                         textAlign: 'center',
                         fontSize: '14px',
                         fontWeight: '500',
-                        color: '#6b7280',
+                        color: '#a0a0a0',
                         padding: '8px 12px'
                       }}>
                         {day}
@@ -204,10 +171,10 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
                 </thead>
                 <tbody>
                   {timeSlots.map(timeSlot => (
-                    <tr key={timeSlot} style={{ borderTop: '1px solid #e5e7eb' }}>
+                    <tr key={timeSlot} style={{ borderTop: '1px solid #333' }}>
                       <td style={{
                         fontSize: '14px',
-                        color: '#374151',
+                        color: '#e0e0e0',
                         padding: '8px 12px',
                         fontWeight: '500'
                       }}>
@@ -222,7 +189,7 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
                             style={{
                               width: '16px',
                               height: '16px',
-                              accentColor: '#3b82f6'
+                              accentColor: '#4caf50'
                             }}
                           />
                         </td>
@@ -235,51 +202,23 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
-          <button
-            onClick={handleSubmit}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '12px 24px',
-              backgroundColor: '#3b82f6',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              transition: 'background-color 0.15s ease-in-out'
-            }}
-            onMouseOver={(e) => e.target.style.backgroundColor = '#2563eb'}
-            onMouseOut={(e) => e.target.style.backgroundColor = '#3b82f6'}
-          >
-            <Save style={{ width: '16px', height: '16px' }} />
-            {editingLecturer ? "Update Lecturer" : "Save Lecturer"}
-          </button>
+        <div className="form-actions">
           {editingLecturer && onCancel && (
             <button
               onClick={onCancel}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '12px 24px',
-                backgroundColor: '#f3f4f6',
-                color: '#374151',
-                border: 'none',
-                borderRadius: '8px',
-                fontWeight: '500',
-                cursor: 'pointer',
-                transition: 'background-color 0.15s ease-in-out'
-              }}
-              onMouseOver={(e) => e.target.style.backgroundColor = '#e5e7eb'}
-              onMouseOut={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+              className="btn btn-secondary"
             >
               <X style={{ width: '16px', height: '16px' }} />
               Cancel
             </button>
           )}
+          <button
+            onClick={handleSubmit}
+            className="btn btn-primary"
+          >
+            <Save style={{ width: '16px', height: '16px' }} />
+            {editingLecturer ? "Update Lecturer" : "Save Lecturer"}
+          </button>
         </div>
       </div>
     </div>
@@ -290,30 +229,13 @@ function LecturerCard({ lecturer, onEdit, onDelete }) {
   const totalSlots = Object.values(lecturer.availability).flat().length;
   
   return (
-    <div style={{
-      backgroundColor: 'white',
-      borderRadius: '12px',
-      boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
-      border: '1px solid #e5e7eb',
-      padding: '24px',
-      transition: 'box-shadow 0.15s ease-in-out',
-      ':hover': {
-        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
-      }
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.boxShadow = '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)';
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.boxShadow = '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)';
-    }}
-    >
+    <div className="data-card">
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{
             width: '48px',
             height: '48px',
-            background: 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
+            background: 'linear-gradient(135deg, #2d5a27 0%, #3a7a33 100%)',
             borderRadius: '8px',
             display: 'flex',
             alignItems: 'center',
@@ -325,17 +247,17 @@ function LecturerCard({ lecturer, onEdit, onDelete }) {
             <h3 style={{
               fontSize: '18px',
               fontWeight: '600',
-              color: '#111827',
+              color: '#e0e0e0',
               margin: '0 0 4px 0'
             }}>
               {lecturer.name}
             </h3>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '4px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', color: '#6b7280' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', color: '#a0a0a0' }}>
                 <BookOpen style={{ width: '16px', height: '16px' }} />
                 <span>{lecturer.courses.length > 0 ? lecturer.courses.join(", ") : "No courses assigned"}</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', color: '#6b7280' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', color: '#a0a0a0' }}>
                 <Clock style={{ width: '16px', height: '16px' }} />
                 <span>{totalSlots} time slots available</span>
               </div>
@@ -343,49 +265,17 @@ function LecturerCard({ lecturer, onEdit, onDelete }) {
           </div>
         </div>
         
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div className="action-buttons">
           <button
             onClick={() => onEdit(lecturer)}
-            style={{
-              padding: '8px',
-              backgroundColor: 'transparent',
-              border: 'none',
-              borderRadius: '8px',
-              color: '#6b7280',
-              cursor: 'pointer',
-              transition: 'all 0.15s ease-in-out'
-            }}
-            onMouseOver={(e) => {
-              e.target.style.backgroundColor = '#eff6ff';
-              e.target.style.color = '#3b82f6';
-            }}
-            onMouseOut={(e) => {
-              e.target.style.backgroundColor = 'transparent';
-              e.target.style.color = '#6b7280';
-            }}
+            className="icon-btn"
             title="Edit lecturer"
           >
             <Edit2 style={{ width: '16px', height: '16px' }} />
           </button>
           <button
             onClick={() => onDelete(lecturer.id)}
-            style={{
-              padding: '8px',
-              backgroundColor: 'transparent',
-              border: 'none',
-              borderRadius: '8px',
-              color: '#6b7280',
-              cursor: 'pointer',
-              transition: 'all 0.15s ease-in-out'
-            }}
-            onMouseOver={(e) => {
-              e.target.style.backgroundColor = '#fef2f2';
-              e.target.style.color = '#dc2626';
-            }}
-            onMouseOut={(e) => {
-              e.target.style.backgroundColor = 'transparent';
-              e.target.style.color = '#6b7280';
-            }}
+            className="icon-btn"
             title="Delete lecturer"
           >
             <Trash2 style={{ width: '16px', height: '16px' }} />
@@ -397,7 +287,7 @@ function LecturerCard({ lecturer, onEdit, onDelete }) {
         <h4 style={{
           fontSize: '14px',
           fontWeight: '500',
-          color: '#374151',
+          color: '#c0c0c0',
           marginBottom: '12px'
         }}>
           Weekly Schedule
@@ -412,14 +302,14 @@ function LecturerCard({ lecturer, onEdit, onDelete }) {
               <div style={{
                 fontSize: '12px',
                 fontWeight: '500',
-                color: '#6b7280',
+                color: '#a0a0a0',
                 marginBottom: '4px'
               }}>
                 {dayLabels[index]}
               </div>
               <div style={{
                 fontSize: '12px',
-                color: '#9ca3af',
+                color: '#a0a0a0',
                 marginBottom: '4px'
               }}>
                 {lecturer.availability[day].length} slots
@@ -427,14 +317,14 @@ function LecturerCard({ lecturer, onEdit, onDelete }) {
               <div style={{
                 width: '100%',
                 height: '8px',
-                backgroundColor: '#e5e7eb',
+                backgroundColor: '#333',
                 borderRadius: '9999px',
                 marginTop: '4px'
               }}>
                 <div
                   style={{
                     height: '100%',
-                    background: 'linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%)',
+                    background: 'linear-gradient(90deg, #2d5a27 0%, #3a7a33 100%)',
                     borderRadius: '9999px',
                     transition: 'all 0.3s ease',
                     width: `${(lecturer.availability[day].length / timeSlots.length) * 100}%`
@@ -478,76 +368,75 @@ export default function LecturersPage() {
     setEditingLecturer(null);
   };
 
+  // Statistics
+  const totalLecturers = lecturers.length;
+  const totalCourses = lecturers.reduce((sum, lecturer) => sum + lecturer.courses.length, 0);
+  const avgAvailability = lecturers.length > 0 
+    ? Math.round(lecturers.reduce((sum, lecturer) => sum + Object.values(lecturer.availability).flat().length, 0) / lecturers.length) 
+    : 0;
+
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: '#f9fafb',
-      padding: '24px'
-    }}>
-      <div style={{ maxWidth: '1792px', margin: '0 auto' }}>
-        <div style={{ marginBottom: '32px' }}>
-          <h1 style={{
-            fontSize: '30px',
-            fontWeight: '700',
-            color: '#111827',
-            marginBottom: '8px'
-          }}>
-            Lecturers Management
-          </h1>
-          <p style={{ color: '#6b7280', margin: 0 }}>
-            Manage lecturer information, courses, and availability schedules
-          </p>
-        </div>
-
-        <LecturerForm 
-          onSave={handleSaveLecturer}
-          editingLecturer={editingLecturer}
-          onCancel={editingLecturer ? handleCancelEdit : null}
-        />
-
-        <div style={{ marginBottom: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h2 style={{
-              fontSize: '20px',
-              fontWeight: '600',
-              color: '#111827',
-              margin: 0
-            }}>
-              Current Lecturers ({lecturers.length})
-            </h2>
+    <div className="page active">
+      <h1>Lecturer Management</h1>
+      
+      {/* Statistics Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '32px' }}>
+        <div className="stat-card">
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#4caf50', marginBottom: '4px' }}>
+            {totalLecturers}
           </div>
+          <div style={{ fontSize: '14px', color: '#a0a0a0' }}>Total Lecturers</div>
         </div>
+        <div className="stat-card">
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#4caf50', marginBottom: '4px' }}>
+            {totalCourses}
+          </div>
+          <div style={{ fontSize: '14px', color: '#a0a0a0' }}>Total Courses</div>
+        </div>
+        <div className="stat-card">
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#4caf50', marginBottom: '4px' }}>
+            {avgAvailability}
+          </div>
+          <div style={{ fontSize: '14px', color: '#a0a0a0' }}>Avg. Availability</div>
+        </div>
+      </div>
 
+      <LecturerForm 
+        onSave={handleSaveLecturer}
+        editingLecturer={editingLecturer}
+        onCancel={editingLecturer ? handleCancelEdit : null}
+      />
+
+      <div className="form-container">
+        <h2>Lecturer List</h2>
+        
         {lecturers.length === 0 ? (
           <div style={{
-            backgroundColor: 'white',
-            borderRadius: '12px',
-            boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
-            border: '1px solid #e5e7eb',
             padding: '48px',
-            textAlign: 'center'
+            textAlign: 'center',
+            color: '#a0a0a0'
           }}>
             <div style={{
               width: '64px',
               height: '64px',
-              backgroundColor: '#f3f4f6',
+              backgroundColor: '#2d5a27',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 16px auto'
             }}>
-              <User style={{ width: '32px', height: '32px', color: '#9ca3af' }} />
+              <User style={{ width: '32px', height: '32px', color: '#4caf50' }} />
             </div>
             <h3 style={{
               fontSize: '18px',
               fontWeight: '500',
-              color: '#111827',
+              color: '#e0e0e0',
               marginBottom: '8px'
             }}>
               No lecturers added yet
             </h3>
-            <p style={{ color: '#6b7280', margin: 0 }}>
+            <p style={{ margin: 0 }}>
               Add your first lecturer using the form above to get started.
             </p>
           </div>

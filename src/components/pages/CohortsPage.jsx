@@ -3,7 +3,7 @@ import { Users, Plus, Trash2, Edit2, Save, X, GraduationCap, Hash } from "lucide
 
 // Mock context for demonstration
 const mockCohorts = [
-  
+  // Sample data would go here
 ];
 
 function CohortForm({ onSave, editingCohort = null, onCancel = null }) {
@@ -49,30 +49,23 @@ function CohortForm({ onSave, editingCohort = null, onCancel = null }) {
   };
 
   return (
-    <div style={{
-      backgroundColor: 'white',
-      borderRadius: '12px',
-      boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
-      border: '1px solid #e5e7eb',
-      padding: '24px',
-      marginBottom: '32px'
-    }}>
+    <div className="form-container">
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
         <div style={{
           width: '40px',
           height: '40px',
-          backgroundColor: '#dcfce7',
+          backgroundColor: '#2d5a27',
           borderRadius: '8px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          <Plus style={{ width: '20px', height: '20px', color: '#16a34a' }} />
+          <Plus style={{ width: '20px', height: '20px', color: '#4caf50' }} />
         </div>
         <h3 style={{
           fontSize: '20px',
           fontWeight: '600',
-          color: '#111827',
+          color: '#e0e0e0',
           margin: 0
         }}>
           {editingCohort ? "Edit Cohort" : "Add New Cohort"}
@@ -80,238 +73,82 @@ function CohortForm({ onSave, editingCohort = null, onCancel = null }) {
       </div>
 
       <div style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px', marginBottom: '24px' }}>
-          <div>
-            <label style={{
-              display: 'block',
-              fontSize: '14px',
-              fontWeight: '500',
-              color: '#374151',
-              marginBottom: '8px'
-            }}>
-              Cohort Name
-            </label>
+        <div className="form-grid">
+          <div className="form-group">
+            <label htmlFor="cohortName">Cohort Name</label>
             <input
               type="text"
+              id="cohortName"
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-              style={{
-                width: '90%',
-                padding: '12px 16px',
-                border: '1px solid #d1d5db',
-                borderRadius: '8px',
-                fontSize: '14px',
-                outline: 'none',
-                transition: 'border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out'
-              }}
               placeholder="e.g., CS Year 1"
-              onFocus={(e) => {
-                e.target.style.borderColor = '#16a34a';
-                e.target.style.boxShadow = '0 0 0 3px rgb(22 163 74 / 0.1)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = '#d1d5db';
-                e.target.style.boxShadow = 'none';
-              }}
               required
             />
           </div>
 
-          <div>
-            <label style={{
-              display: 'block',
-              fontSize: '14px',
-              fontWeight: '500',
-              color: '#374151',
-              marginBottom: '8px'
-            }}>
-              Cohort Size
-            </label>
+          <div className="form-group">
+            <label htmlFor="cohortSize">Size</label>
             <input
               type="number"
+              id="cohortSize"
               value={formData.size}
               onChange={(e) => setFormData(prev => ({ ...prev, size: e.target.value }))}
-              style={{
-                width: '90%',
-                padding: '12px 16px',
-                border: '1px solid #d1d5db',
-                borderRadius: '8px',
-                fontSize: '14px',
-                outline: 'none',
-                transition: 'border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out'
-              }}
               placeholder="e.g., 30"
               min="1"
-              onFocus={(e) => {
-                e.target.style.borderColor = '#16a34a';
-                e.target.style.boxShadow = '0 0 0 3px rgb(22 163 74 / 0.1)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = '#d1d5db';
-                e.target.style.boxShadow = 'none';
-              }}
               required
             />
           </div>
 
-          <div>
-            <label style={{
-              display: 'block',
-              fontSize: '14px',
-              fontWeight: '500',
-              color: '#374151',
-              marginBottom: '8px'
-            }}>
-              Program
-            </label>
+          <div className="form-group">
+            <label htmlFor="cohortProgram">Program</label>
             <input
               type="text"
+              id="cohortProgram"
               value={formData.program}
               onChange={(e) => setFormData(prev => ({ ...prev, program: e.target.value }))}
-              style={{
-                width: '90%',
-                padding: '12px 16px',
-                border: '1px solid #d1d5db',
-                borderRadius: '8px',
-                fontSize: '14px',
-                outline: 'none',
-                transition: 'border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out'
-              }}
               placeholder="e.g., Computer Science"
-              onFocus={(e) => {
-                e.target.style.borderColor = '#16a34a';
-                e.target.style.boxShadow = '0 0 0 3px rgb(22 163 74 / 0.1)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = '#d1d5db';
-                e.target.style.boxShadow = 'none';
-              }}
             />
           </div>
 
-          <div>
-            <label style={{
-              display: 'block',
-              fontSize: '14px',
-              fontWeight: '500',
-              color: '#374151',
-              marginBottom: '8px'
-            }}>
-              Academic Year
-            </label>
+          <div className="form-group">
+            <label htmlFor="cohortYear">Year</label>
             <input
               type="number"
+              id="cohortYear"
               value={formData.year}
               onChange={(e) => setFormData(prev => ({ ...prev, year: e.target.value }))}
-              style={{
-                width: '90%',
-                padding: '12px 16px',
-                border: '1px solid #d1d5db',
-                borderRadius: '8px',
-                fontSize: '14px',
-                outline: 'none',
-                transition: 'border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out'
-              }}
               placeholder="e.g., 1"
               min="1"
-              max="4"
-              onFocus={(e) => {
-                e.target.style.borderColor = '#16a34a';
-                e.target.style.boxShadow = '0 0 0 3px rgb(22 163 74 / 0.1)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = '#d1d5db';
-                e.target.style.boxShadow = 'none';
-              }}
+              max="5"
             />
           </div>
 
-          <div>
-            <label style={{
-              display: 'block',
-              fontSize: '14px',
-              fontWeight: '500',
-              color: '#374151',
-              marginBottom: '8px'
-            }}>
-              Semester
-            </label>
+          <div className="form-group">
+            <label htmlFor="cohortSemester">Semester</label>
             <select
+              id="cohortSemester"
               value={formData.semester}
               onChange={(e) => setFormData(prev => ({ ...prev, semester: e.target.value }))}
-              style={{
-                width: '90%',
-                padding: '12px 16px',
-                border: '1px solid #d1d5db',
-                borderRadius: '8px',
-                fontSize: '14px',
-                outline: 'none',
-                backgroundColor: 'white',
-                transition: 'border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out'
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = '#16a34a';
-                e.target.style.boxShadow = '0 0 0 3px rgb(22 163 74 / 0.1)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = '#d1d5db';
-                e.target.style.boxShadow = 'none';
-              }}
             >
               <option value="">Select semester</option>
-              <option value="Year 1">Year 1</option>
-              <option value="Year 2">Year 2</option>
-              <option value="Year 3">Year 3</option>
-              <option value="Year 4">Year 4</option>
+              <option value="semester 1">semester 1</option>
+              <option value="semester 2">semester 2</option>
+              <option value="semester 3">semester 3</option>
             </select>
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
-          <button
-            onClick={handleSubmit}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '12px 24px',
-              backgroundColor: '#16a34a',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              fontWeight: '500',
-              cursor: 'pointer',
-              transition: 'background-color 0.15s ease-in-out'
-            }}
-            onMouseOver={(e) => e.target.style.backgroundColor = '#15803d'}
-            onMouseOut={(e) => e.target.style.backgroundColor = '#16a34a'}
-          >
-            <Save style={{ width: '16px', height: '16px' }} />
-            {editingCohort ? "Update Cohort" : "Save Cohort"}
-          </button>
+        <div className="form-actions">
           {editingCohort && onCancel && (
-            <button
-              onClick={onCancel}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '12px 24px',
-                backgroundColor: '#f3f4f6',
-                color: '#374151',
-                border: 'none',
-                borderRadius: '8px',
-                fontWeight: '500',
-                cursor: 'pointer',
-                transition: 'background-color 0.15s ease-in-out'
-              }}
-              onMouseOver={(e) => e.target.style.backgroundColor = '#e5e7eb'}
-              onMouseOut={(e) => e.target.style.backgroundColor = '#f3f4f6'}
-            >
+            <button className="btn btn-secondary" onClick={onCancel}>
               <X style={{ width: '16px', height: '16px' }} />
               Cancel
             </button>
           )}
+          <button className="btn btn-primary" onClick={handleSubmit}>
+            <Save style={{ width: '16px', height: '16px' }} />
+            {editingCohort ? "Update Cohort" : "Save Cohort"}
+          </button>
         </div>
       </div>
     </div>
@@ -319,19 +156,7 @@ function CohortForm({ onSave, editingCohort = null, onCancel = null }) {
 }
 
 function CohortCard({ cohort, onEdit, onDelete }) {
-  const getSizeColor = (size) => {
-    if (size >= 40) return '#dc2626';
-    if (size >= 30) return '#ea580c';
-    if (size >= 20) return '#16a34a';
-    return '#2563eb';
-  };
 
-  const getSizeLabel = (size) => {
-    if (size >= 40) return 'Large';
-    if (size >= 30) return 'Medium';
-    if (size >= 20) return 'Small';
-    return 'Mini';
-  };
 
   return (
     <div style={{
@@ -420,9 +245,9 @@ function CohortCard({ cohort, onEdit, onDelete }) {
               e.target.style.backgroundColor = 'transparent';
               e.target.style.color = '#6b7280';
             }}
-            title="Edit cohort"
+            aria-label="Edit cohort"
           >
-            <Edit2 style={{ width: '16px', height: '16px' }} />
+            <Edit2 size={20} />
           </button>
           <button
             onClick={() => onDelete(cohort.id)}
@@ -443,62 +268,31 @@ function CohortCard({ cohort, onEdit, onDelete }) {
               e.target.style.backgroundColor = 'transparent';
               e.target.style.color = '#6b7280';
             }}
-            title="Delete cohort"
+            aria-label="Delete cohort"
           >
-            <Trash2 style={{ width: '16px', height: '16px' }} />
+            <Trash2 size={20} />
           </button>
         </div>
       </div>
 
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-          <span style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>
-            Cohort Size
-          </span>
-          <div style={{
-            padding: '4px 12px',
-            borderRadius: '12px',
-            backgroundColor: `${getSizeColor(cohort.size)}15`,
-            color: getSizeColor(cohort.size),
-            fontSize: '12px',
-            fontWeight: '600'
-          }}>
-            {getSizeLabel(cohort.size)}
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-          <div style={{
-            flex: 1,
-            height: '8px',
-            backgroundColor: '#f3f4f6',
-            borderRadius: '4px',
-            overflow: 'hidden'
-          }}>
-            <div style={{
-              height: '100%',
-              backgroundColor: getSizeColor(cohort.size),
-              width: `${Math.min((cohort.size / 50) * 100, 100)}%`,
-              transition: 'width 0.3s ease',
-              borderRadius: '4px'
-            }} />
-          </div>
-          <span style={{ fontSize: '14px', fontWeight: '600', color: getSizeColor(cohort.size), minWidth: '30px' }}>
-            {cohort.size}
-          </span>
-        </div>
-
-        {(cohort.year || cohort.semester) && (
-          <div style={{ display: 'flex', gap: '12px', fontSize: '13px', color: '#6b7280' }}>
+      {(cohort.year || cohort.semester) && (
+        <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #2d5a27' }}>
+          <div style={{ display: 'flex', gap: '16px' }}>
             {cohort.year && (
-              <span>Year {cohort.year}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', color: '#4b5563' }}>
+                <span>Year:</span>
+                <span style={{ fontWeight: '500' }}>{cohort.year}</span>
+              </div>
             )}
             {cohort.semester && (
-              <span>• {cohort.semester}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', color: '#4b5563' }}>
+                <span>Semester:</span>
+                <span style={{ fontWeight: '500' }}>{cohort.semester}</span>
+              </div>
             )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -537,115 +331,67 @@ export default function CohortsPage() {
   const averageSize = cohorts.length > 0 ? Math.round(totalStudents / cohorts.length) : 0;
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: '#f9fafb',
-      padding: '24px'
-    }}>
-      <div style={{ maxWidth: '1792px', margin: '0 auto' }}>
-        <div style={{ marginBottom: '32px' }}>
-          <h1 style={{
-            fontSize: '30px',
-            fontWeight: '700',
-            color: '#111827',
-            marginBottom: '8px'
-          }}>
-            Cohorts Management
-          </h1>
-          <p style={{ color: '#6b7280', margin: 0 }}>
-            Manage student cohorts, sizes, and academic information
-          </p>
+    <div className="page active">
+      <h1>Cohort Management</h1>
+      
+      {/* Statistics Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '32px' }}>
+        <div className="stat-card">
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#4caf50', marginBottom: '4px' }}>
+            {cohorts.length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#a0a0a0' }}>Total Cohorts</div>
         </div>
-
-        {/* Statistics Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '32px' }}>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#16a34a', marginBottom: '4px' }}>
-              {cohorts.length}
-            </div>
-            <div style={{ fontSize: '14px', color: '#6b7280' }}>Total Cohorts</div>
+        <div className="stat-card">
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#4caf50', marginBottom: '4px' }}>
+            {totalStudents}
           </div>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#2563eb', marginBottom: '4px' }}>
-              {totalStudents}
-            </div>
-            <div style={{ fontSize: '14px', color: '#6b7280' }}>Total Students</div>
-          </div>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '24px', fontWeight: '700', color: '#ea580c', marginBottom: '4px' }}>
-              {averageSize}
-            </div>
-            <div style={{ fontSize: '14px', color: '#6b7280' }}>Average Size</div>
-          </div>
+          <div style={{ fontSize: '14px', color: '#a0a0a0' }}>Total Students</div>
         </div>
-
-        <CohortForm 
-          onSave={handleSaveCohort}
-          editingCohort={editingCohort}
-          onCancel={editingCohort ? handleCancelEdit : null}
-        />
-
-        <div style={{ marginBottom: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h2 style={{
-              fontSize: '20px',
-              fontWeight: '600',
-              color: '#111827',
-              margin: 0
-            }}>
-              Current Cohorts ({cohorts.length})
-            </h2>
+        <div className="stat-card">
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#4caf50', marginBottom: '4px' }}>
+            {averageSize}
           </div>
+          <div style={{ fontSize: '14px', color: '#a0a0a0' }}>Average Size</div>
         </div>
+      </div>
 
+      <CohortForm 
+        onSave={handleSaveCohort}
+        editingCohort={editingCohort}
+        onCancel={editingCohort ? handleCancelEdit : null}
+      />
+
+      <div className="form-container">
+        <h2>Cohort List</h2>
+        
         {cohorts.length === 0 ? (
           <div style={{
-            backgroundColor: 'white',
-            borderRadius: '12px',
-            boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
-            border: '1px solid #e5e7eb',
             padding: '48px',
-            textAlign: 'center'
+            textAlign: 'center',
+            color: '#a0a0a0'
           }}>
             <div style={{
               width: '64px',
               height: '64px',
-              backgroundColor: '#f3f4f6',
+              backgroundColor: '#2d5a27',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 16px auto'
             }}>
-              <Users style={{ width: '32px', height: '32px', color: '#9ca3af' }} />
+              <Users style={{ width: '32px', height: '32px', color: '#4caf50' }} />
             </div>
             <h3 style={{
               fontSize: '18px',
               fontWeight: '500',
-              color: '#111827',
+              color: '#e0e0e0',
               marginBottom: '8px'
             }}>
               No cohorts added yet
             </h3>
-            <p style={{ color: '#6b7280', margin: 0 }}>
+            <p style={{ margin: 0 }}>
               Add your first cohort using the form above to get started.
             </p>
           </div>

@@ -8,6 +8,7 @@ import ProgramsPage from "./components/pages/ProgramsPage";
 import LecturersPage from "./components/pages/LecturersPage";
 import CohortsPage from "./components/pages/CohortsPage";
 import RoomsPage from "./components/pages/RoomsPage";
+import TimetablesPage from "./components/pages/TimetablesPage";
 
 export default function App() {
   const navItems = [
@@ -21,13 +22,13 @@ export default function App() {
   return (
     <TimetableProvider>
       <Router>
-        <div style={{ display: "flex", minHeight: "100vh", background: "#f9fafb", color: "#111827" }}>
+        <div style={{ display: "flex", minHeight: "100vh", background: "#1e1e1e", color: "#ffffff" }}>
           {/* Sidebar */}
           <aside
             style={{
               width: 240,
-              background: "#ffffff",
-              borderRight: "1px solid #e5e7eb",
+              background: "#1e1e1e",
+              borderRight: "1px solidrgb(0, 13, 39)",
               display: "flex",
               flexDirection: "column",
               padding: "20px 16px",
@@ -46,8 +47,8 @@ export default function App() {
                     padding: "10px 12px",
                     borderRadius: 8,
                     fontWeight: 500,
-                    background: isActive ? "#6366f1" : "#f3f4f6",
-                    color: isActive ? "#fff" : "#111827",
+                    background: isActive ? "#2b5a27" : "#1e1e1e",
+                    color: isActive ? "#1e1e1e" : "#fff",
                     textDecoration: "none",
                     transition: "all 0.2s ease",
                   })}
@@ -67,6 +68,7 @@ export default function App() {
               <Route path="/lecturers" element={<LecturersPage />} />
               <Route path="/cohorts" element={<CohortsPage />} />
               <Route path="/rooms" element={<RoomsPage />} />
+              <Route path="/timetables" element={<TimetablesPage />} />
             </Routes>
           </main>
         </div>

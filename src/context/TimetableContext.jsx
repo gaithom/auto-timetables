@@ -10,7 +10,7 @@ export function TimetableProvider({ children }) {
   const [lecturers, setLecturers] = useState(sample.lecturers);
   const [cohorts, setCohorts] = useState(sample.cohorts);
   const [rooms, setRooms] = useState(sample.rooms);
-  const [timetable, setTimetable] = useState(sample.timetable || {});
+  const [timetables, setTimetables] = useState(sample.timetables || {});
 
   const addProgram = (payload) => setPrograms((p) => [...p, { id: uuid(), ...payload }]);
   const addLecturer = (payload) => setLecturers((p) => [...p, { id: uuid(), ...payload }]);
@@ -21,16 +21,16 @@ export function TimetableProvider({ children }) {
 
   const regenerate = useCallback(() => {
     const next = generateTimetable({ programs, lecturers, cohorts, rooms });
-    setTimetable(next);
+    setTimetables(next);
   }, [programs, lecturers, cohorts, rooms]);
 
   const value = useMemo(
     () => ({
       programs,
       lecturers,
-      cohorts,
+      cohorts,  
       rooms,
-      timetable,
+      timetables,
       DAYS,
       SLOTS,
       addProgram,
@@ -43,7 +43,7 @@ export function TimetableProvider({ children }) {
       removeRoom: removeById(setRooms),
       regenerate,
     }),
-    [programs, lecturers, cohorts, rooms, timetable, regenerate]
+    [programs, lecturers, cohorts, rooms, timetables  , regenerate]
   );
 
   return <TimetableContext.Provider value={value}>{children}</TimetableContext.Provider>;

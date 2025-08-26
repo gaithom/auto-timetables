@@ -46,21 +46,8 @@ const RoomForm = ({ onAddRoom }) => {
     return (
       <button 
         onClick={() => setIsOpen(true)}
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '8px',
-          background: '#3b82f6',
-          color: 'white',
-          padding: '10px 16px',
-          borderRadius: '8px',
-          fontWeight: '500',
-          border: 'none',
-          cursor: 'pointer',
-          transition: 'background-color 0.2s ease'
-        }}
-        onMouseOver={(e) => e.target.style.backgroundColor = '#2563eb'}
-        onMouseOut={(e) => e.target.style.backgroundColor = '#3b82f6'}
+        className="btn btn-primary"
+        style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
       >
         <Plus size={16} />
         Add New Room
@@ -69,74 +56,43 @@ const RoomForm = ({ onAddRoom }) => {
   }
 
   return (
-    <div style={{
-      background: 'white',
-      borderRadius: '12px',
-      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-      border: '1px solid #e5e7eb',
-      padding: '24px',
-      marginBottom: '24px'
-    }}>
+    <div className="form-container">
       <h3 style={{ 
-        fontSize: '18px', 
+        fontSize: '20px', 
         fontWeight: '600', 
-        color: '#1f2937', 
+        color: '#e0e0e0', 
         marginBottom: '16px',
-        marginTop: '0'
+        marginTop: '0',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px'
       }}>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          backgroundColor: '#2d5a27',
+          borderRadius: '8px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <Plus style={{ width: '20px', height: '20px', color: '#4caf50' }} />
+        </div>
         Add New Room
       </h3>
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-        gap: '16px',
-        marginBottom: '16px'
-      }}>
-        <div>
-          <label style={{
-            display: 'block',
-            fontSize: '14px',
-            fontWeight: '500',
-            color: '#374151',
-            marginBottom: '8px'
-          }}>
-            Room Name
-          </label>
+      <div className="form-grid">
+        <div className="form-group">
+          <label>Room Name</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="e.g., Lab A"
-            style={{
-              width: '100%',
-              padding: '8px 12px',
-              border: '1px solid #d1d5db',
-              borderRadius: '8px',
-              fontSize: '14px',
-              outline: 'none',
-              transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = '#3b82f6';
-              e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = '#d1d5db';
-              e.target.style.boxShadow = 'none';
-            }}
           />
         </div>
-        <div>
-          <label style={{
-            display: 'block',
-            fontSize: '14px',
-            fontWeight: '500',
-            color: '#374151',
-            marginBottom: '8px'
-          }}>
-            Capacity
-          </label>
+        <div className="form-group">
+          <label>Capacity</label>
           <input
             type="number"
             value={capacity}
@@ -144,60 +100,21 @@ const RoomForm = ({ onAddRoom }) => {
             onKeyDown={handleKeyDown}
             placeholder="40"
             min="1"
-            style={{
-              width: '100%',
-              padding: '8px 12px',
-              border: '1px solid #d1d5db',
-              borderRadius: '8px',
-              fontSize: '14px',
-              outline: 'none',
-              transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = '#3b82f6';
-              e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = '#d1d5db';
-              e.target.style.boxShadow = 'none';
-            }}
           />
         </div>
       </div>
-      <div style={{ display: 'flex', gap: '12px', paddingTop: '8px' }}>
-        <button
-          onClick={handleSubmit}
-          style={{
-            background: '#3b82f6',
-            color: 'white',
-            padding: '8px 16px',
-            borderRadius: '8px',
-            fontWeight: '500',
-            border: 'none',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s ease'
-          }}
-          onMouseOver={(e) => e.target.style.backgroundColor = '#2563eb'}
-          onMouseOut={(e) => e.target.style.backgroundColor = '#3b82f6'}
-        >
-          Save Room
-        </button>
+      <div className="form-actions">
         <button
           onClick={() => setIsOpen(false)}
-          style={{
-            background: '#f3f4f6',
-            color: '#374151',
-            padding: '8px 16px',
-            borderRadius: '8px',
-            fontWeight: '500',
-            border: 'none',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s ease'
-          }}
-          onMouseOver={(e) => e.target.style.backgroundColor = '#e5e7eb'}
-          onMouseOut={(e) => e.target.style.backgroundColor = '#f3f4f6'}
+          className="btn btn-secondary"
         >
           Cancel
+        </button>
+        <button
+          onClick={handleSubmit}
+          className="btn btn-primary"
+        >
+          Save Room
         </button>
       </div>
     </div>
@@ -218,274 +135,208 @@ export default function RoomsPage() {
     }
   };
 
+  // Statistics
+  const totalCapacity = rooms.reduce((sum, room) => sum + room.capacity, 0);
+  const largeRooms = rooms.filter(room => room.capacity >= 50).length;
+
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#f9fafb',
-      padding: '24px'
-    }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        {/* Header */}
-        <div style={{ marginBottom: '32px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-            <Building2 style={{ color: '#3b82f6' }} size={32} />
-            <h1 style={{
-              fontSize: '32px',
-              fontWeight: '700',
-              color: '#1f2937',
-              margin: '0'
-            }}>
-              Room Management
-            </h1>
+    <div className="page active">
+      {/* Header */}
+      <div style={{ marginBottom: '32px' }}>
+        <h1>Room Management</h1>
+        <p>Manage your facility rooms and their capacities</p>
+      </div>
+
+      {/* Statistics Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '32px' }}>
+        <div className="stat-card">
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#4caf50', marginBottom: '4px' }}>
+            {rooms.length}
           </div>
-          <p style={{ color: '#6b7280', margin: '0' }}>
-            Manage your facility rooms and their capacities
-          </p>
+          <div style={{ fontSize: '14px', color: '#a0a0a0' }}>Total Rooms</div>
         </div>
-
-        {/* Add Room Form */}
-        <div style={{ marginBottom: '24px' }}>
-          <RoomForm onAddRoom={addRoom} />
+        <div className="stat-card">
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#4caf50', marginBottom: '4px' }}>
+            {totalCapacity}
+          </div>
+          <div style={{ fontSize: '14px', color: '#a0a0a0' }}>Total Capacity</div>
         </div>
+        <div className="stat-card">
+          <div style={{ fontSize: '24px', fontWeight: '700', color: '#4caf50', marginBottom: '4px' }}>
+            {largeRooms}
+          </div>
+          <div style={{ fontSize: '14px', color: '#a0a0a0' }}>Large Rooms</div>
+        </div>
+      </div>
 
-        {/* Search and Stats */}
-        <div style={{
-          background: 'white',
-          borderRadius: '12px',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e5e7eb',
-          padding: '24px',
-          marginBottom: '24px'
-        }}>
+      {/* Add Room Form */}
+      <div style={{ marginBottom: '24px' }}>
+        <RoomForm onAddRoom={addRoom} />
+      </div>
+
+      {/* Search and Stats */}
+      <div className="form-container">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ position: 'relative', maxWidth: '320px' }}>
+            <Search
+              style={{
+                position: 'absolute',
+                left: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: '#a0a0a0'
+              }}
+              size={16}
+            />
+            <input
+              type="text"
+              placeholder="Search rooms..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </div>
           <div style={{
             display: 'flex',
-            flexDirection: 'column',
-            gap: '16px',
-            marginBottom: '16px'
+            alignItems: 'center',
+            gap: '24px',
+            fontSize: '14px',
+            color: '#a0a0a0'
           }}>
-            <div style={{ position: 'relative', maxWidth: '320px' }}>
-              <Search
-                style={{
-                  position: 'absolute',
-                  left: '12px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: '#9ca3af'
-                }}
-                size={16}
-              />
-              <input
-                type="text"
-                placeholder="Search rooms..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={{
-                  width: '100%',
-                  paddingLeft: '40px',
-                  paddingRight: '16px',
-                  paddingTop: '8px',
-                  paddingBottom: '8px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '8px',
-                  fontSize: '14px',
-                  outline: 'none',
-                  transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = '#3b82f6';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = '#d1d5db';
-                  e.target.style.boxShadow = 'none';
-                }}
-              />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{
+                width: '8px',
+                height: '8px',
+                background: '#4caf50',
+                borderRadius: '50%'
+              }}></div>
+              <span>Total Rooms: {rooms.length}</span>
             </div>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '24px',
-              fontSize: '14px',
-              color: '#6b7280'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{
-                  width: '8px',
-                  height: '8px',
-                  background: '#3b82f6',
-                  borderRadius: '50%'
-                }}></div>
-                <span>Total Rooms: {rooms.length}</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Users size={14} />
-                <span>Total Capacity: {rooms.reduce((sum, room) => sum + room.capacity, 0)}</span>
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Users size={14} />
+              <span>Total Capacity: {totalCapacity}</span>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Rooms Grid */}
-        {filteredRooms.length > 0 ? (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '24px'
-          }}>
-            {filteredRooms.map(room => (
-              <div
-                key={room.id}
-                style={{
-                  background: 'white',
-                  borderRadius: '12px',
-                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                  border: '1px solid #e5e7eb',
-                  overflow: 'hidden',
-                  transition: 'box-shadow 0.2s ease, transform 0.2s ease'
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                <div style={{ padding: '24px' }}>
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    justifyContent: 'space-between',
-                    marginBottom: '16px'
+      {/* Rooms Grid */}
+      {filteredRooms.length > 0 ? (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '24px'
+        }}>
+          {filteredRooms.map(room => (
+            <div
+              key={room.id}
+              className="data-card"
+            >
+              <div style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+                marginBottom: '16px'
+              }}>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{
+                    fontSize: '18px',
+                    fontWeight: '600',
+                    color: '#e0e0e0',
+                    margin: '0 0 4px 0'
                   }}>
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{
-                        fontSize: '18px',
-                        fontWeight: '600',
-                        color: '#1f2937',
-                        margin: '0 0 4px 0'
-                      }}>
-                        {room.name}
-                      </h3>
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        color: '#6b7280'
-                      }}>
-                        <Users size={16} />
-                        <span style={{ fontSize: '14px' }}>Capacity: {room.capacity}</span>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => handleRemoveRoom(room.id, room.name)}
-                      style={{
-                        padding: '8px',
-                        color: '#ef4444',
-                        background: 'transparent',
-                        border: 'none',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.2s ease'
-                      }}
-                      onMouseOver={(e) => e.target.style.backgroundColor = '#fef2f2'}
-                      onMouseOut={(e) => e.target.style.backgroundColor = 'transparent'}
-                      title={`Delete ${room.name}`}
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                  
-                  {/* Capacity Bar */}
-                  <div style={{
-                    width: '100%',
-                    background: '#e5e7eb',
-                    borderRadius: '9999px',
-                    height: '8px',
-                    marginBottom: '12px'
-                  }}>
-                    <div 
-                      style={{
-                        background: '#3b82f6',
-                        height: '8px',
-                        borderRadius: '9999px',
-                        width: `${Math.min((room.capacity / 100) * 100, 100)}%`,
-                        transition: 'width 0.3s ease'
-                      }}
-                    ></div>
-                  </div>
-                  
+                    {room.name}
+                  </h3>
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
-                    fontSize: '12px',
-                    color: '#9ca3af'
+                    gap: '8px',
+                    color: '#a0a0a0'
                   }}>
-                    <span>Room ID: {room.id}</span>
-                    <span style={{
-                      padding: '4px 8px',
-                      borderRadius: '9999px',
-                      fontSize: '12px',
-                      fontWeight: '500',
-                      ...(room.capacity >= 50 
-                        ? { background: '#dcfce7', color: '#166534' }
-                        : room.capacity >= 30 
-                        ? { background: '#fef3c7', color: '#92400e' }
-                        : { background: '#fee2e2', color: '#991b1b' })
-                    }}>
-                      {room.capacity >= 50 ? 'Large' : room.capacity >= 30 ? 'Medium' : 'Small'}
-                    </span>
+                    <Users size={16} />
+                    <span style={{ fontSize: '14px' }}>Capacity: {room.capacity}</span>
                   </div>
                 </div>
+                <button
+                  onClick={() => handleRemoveRoom(room.id, room.name)}
+                  className="icon-btn"
+                  title={`Delete ${room.name}`}
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
-            ))}
-          </div>
-        ) : (
-          <div style={{
-            textAlign: 'center',
-            padding: '48px',
-            background: 'white',
-            borderRadius: '12px',
-            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-            border: '1px solid #e5e7eb'
-          }}>
-            <Building2 style={{ margin: '0 auto 16px', color: '#9ca3af' }} size={48} />
-            <h3 style={{
-              fontSize: '18px',
-              fontWeight: '500',
-              color: '#1f2937',
-              margin: '0 0 8px 0'
-            }}>
-              {searchTerm ? 'No rooms found' : 'No rooms yet'}
-            </h3>
-            <p style={{ color: '#6b7280', margin: '0 0 24px 0' }}>
-              {searchTerm 
-                ? `No rooms match "${searchTerm}". Try a different search term.`
-                : 'Get started by adding your first room to the system.'
-              }
-            </p>
-            {searchTerm && (
-              <button
-                onClick={() => setSearchTerm('')}
-                style={{
-                  color: '#3b82f6',
-                  background: 'none',
-                  border: 'none',
+              
+              {/* Capacity Bar */}
+              <div style={{
+                width: '100%',
+                background: '#333',
+                borderRadius: '9999px',
+                height: '8px',
+                marginBottom: '12px'
+              }}>
+                <div 
+                  style={{
+                    background: '#4caf50',
+                    height: '8px',
+                    borderRadius: '9999px',
+                    width: `${Math.min((room.capacity / 100) * 100, 100)}%`,
+                    transition: 'width 0.3s ease'
+                  }}
+                ></div>
+              </div>
+              
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                fontSize: '12px',
+                color: '#888'
+              }}>
+                <span>Room ID: {room.id}</span>
+                <span style={{
+                  padding: '4px 8px',
+                  borderRadius: '9999px',
+                  fontSize: '12px',
                   fontWeight: '500',
-                  cursor: 'pointer',
-                  textDecoration: 'underline'
-                }}
-                onMouseOver={(e) => e.target.style.color = '#2563eb'}
-                onMouseOut={(e) => e.target.style.color = '#3b82f6'}
-              >
-                Clear search
-              </button>
-            )}
-          </div>
-        )}
-      </div>
+                  ...(room.capacity >= 50 
+                    ? { background: 'rgba(76, 175, 80, 0.2)', color: '#4caf50' }
+                    : room.capacity >= 30 
+                    ? { background: 'rgba(255, 152, 0, 0.2)', color: '#ff9800' }
+                    : { background: 'rgba(244, 67, 54, 0.2)', color: '#f44336' })
+                }}>
+                  {room.capacity >= 50 ? 'Large' : room.capacity >= 30 ? 'Medium' : 'Small'}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="form-container" style={{ textAlign: 'center', padding: '48px' }}>
+          <Building2 style={{ margin: '0 auto 16px', color: '#4caf50' }} size={48} />
+          <h3 style={{
+            fontSize: '18px',
+            fontWeight: '500',
+            color: '#e0e0e0',
+            margin: '0 0 8px 0'
+          }}>
+            {searchTerm ? 'No rooms found' : 'No rooms yet'}
+          </h3>
+          <p style={{ color: '#a0a0a0', margin: '0 0 24px 0' }}>
+            {searchTerm 
+              ? `No rooms match "${searchTerm}". Try a different search term.`
+              : 'Get started by adding your first room to the system.'
+            }
+          </p>
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className="btn btn-secondary"
+            >
+              Clear search
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
