@@ -14,12 +14,14 @@ import {
   Grid,
   List,
   Printer,
-  Download
-} from "lucide-react";
+  Download,
+  ChevronLeft} from "lucide-react";
 
 export default function EnhancedDashboard() {
   const [showTimetable, setShowTimetable] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
+  // eslint-disable-next-line no-empty-pattern
+  const [] = useState(0);
 
   // Sample timetable data
   const timetableData = {
@@ -30,15 +32,10 @@ export default function EnhancedDashboard() {
         lecturer: 'Dr. Sarah Johnson', 
         room: 'LH001', 
         time: '9:00 AM - 11:00 AM',
-        color: '#3b82f6'
-      },
-      { 
-        code: 'CS101', 
-        title: 'Introduction to Computer Science', 
-        lecturer: 'Dr. Sarah Johnson', 
-        room: 'LH001', 
-        time: '9:00 AM - 11:00 AM',
-        color: '#3b82f6'
+        color: '#3b82f6',
+        start: 9, // hour start
+        end: 11,   // hour end
+        duration: 2 // hours duration
       },
       { 
         code: 'CS201', 
@@ -46,15 +43,10 @@ export default function EnhancedDashboard() {
         lecturer: 'Dr. Sarah Johnson', 
         room: 'LH002', 
         time: '2:00 PM - 4:00 PM',
-        color: '#3b82f6'
-      },
-      { 
-        code: 'CS201', 
-        title: 'Data Structures and Algorithms', 
-        lecturer: 'Dr. Sarah Johnson', 
-        room: 'LH002', 
-        time: '2:00 PM - 4:00 PM',
-        color: '#3b82f6'
+        color: '#10b981',
+        start: 14,
+        end: 16,
+        duration: 2
       }
     ],
     Tuesday: [
@@ -64,23 +56,10 @@ export default function EnhancedDashboard() {
         lecturer: 'Prof. Michael Chen', 
         room: 'LAB201', 
         time: '10:00 AM - 1:00 PM',
-        color: '#10b981'
-      },
-      { 
-        code: 'CS301L', 
-        title: 'Database Systems Lab', 
-        lecturer: 'Prof. Michael Chen', 
-        room: 'LAB201', 
-        time: '10:00 AM - 1:00 PM',
-        color: '#10b981'
-      },
-      { 
-        code: 'CS301L', 
-        title: 'Database Systems Lab', 
-        lecturer: 'Prof. Michael Chen', 
-        room: 'LAB201', 
-        time: '10:00 AM - 1:00 PM',
-        color: '#10b981'
+        color: '#f59e0b',
+        start: 10,
+        end: 13,
+        duration: 3
       }
     ],
     Wednesday: [
@@ -90,7 +69,10 @@ export default function EnhancedDashboard() {
         lecturer: 'Dr. Sarah Johnson', 
         room: 'SR105', 
         time: '11:00 AM - 12:00 PM',
-        color: '#f59e0b'
+        color: '#ef4444',
+        start: 11,
+        end: 12,
+        duration: 1
       }
     ],
     Thursday: [
@@ -100,15 +82,10 @@ export default function EnhancedDashboard() {
         lecturer: 'Prof. Michael Chen', 
         room: 'LH001', 
         time: '9:00 AM - 11:00 AM',
-        color: '#3b82f6'
-      },
-      { 
-        code: 'CS201', 
-        title: 'Data Structures and Algorithms', 
-        lecturer: 'Prof. Michael Chen', 
-        room: 'LH001', 
-        time: '9:00 AM - 11:00 AM',
-        color: '#3b82f6'
+        color: '#8b5cf6',
+        start: 9,
+        end: 11,
+        duration: 2
       }
     ],
     Friday: [
@@ -118,15 +95,10 @@ export default function EnhancedDashboard() {
         lecturer: 'Prof. Michael Chen', 
         room: 'LAB201', 
         time: '2:00 PM - 5:00 PM',
-        color: '#10b981'
-      },
-      { 
-        code: 'CS301L', 
-        title: 'Database Systems Lab', 
-        lecturer: 'Prof. Michael Chen', 
-        room: 'LAB201', 
-        time: '2:00 PM - 5:00 PM',
-        color: '#10b981'
+        color: '#ec4899',
+        start: 14,
+        end: 17,
+        duration: 3
       }
     ]
   };
@@ -137,23 +109,35 @@ export default function EnhancedDashboard() {
   ];
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+  
+  // Function to check if a class occurs at a specific time
+  const isClassAtTime = (dayClasses, timeIndex) => {
+    const time = timeSlots[timeIndex];
+    const hour = parseInt(time.split(':')[0]) + (time.includes('PM') && time.split(':')[0] !== '12' ? 12 : 0);
+    
+    return dayClasses.find(cls => {
+      const classStartHour = cls.start;
+      return hour >= classStartHour && hour < cls.end;
+    });
+  };
 
   if (showTimetable) {
     return (
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto">
           {/* Timetable Header */}
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Timetable Viewer</h1>
               <p className="text-gray-600">View and manage class schedules</p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               <button 
                 onClick={() => setShowTimetable(false)}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
               >
-                ← Back to Dashboard
+                <ChevronLeft size={16} />
+                Back to Dashboard
               </button>
               <button className="flex items-center gap-2 px-4 py-2 bg-white border rounded-lg hover:bg-gray-50">
                 <Printer size={16} />
@@ -168,18 +152,18 @@ export default function EnhancedDashboard() {
 
           {/* Filters and View Controls */}
           <div className="bg-white rounded-lg p-4 mb-6 shadow-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <div className="flex items-center gap-2">
                   <Filter size={16} />
                   <span className="text-sm font-medium">Filters:</span>
                 </div>
-                <select className="px-3 py-1 border rounded-md text-sm">
+                <select className="px-3 py-2 border rounded-md text-sm">
                   <option>All Programs</option>
                   <option>Computer Science</option>
                   <option>Business Administration</option>
                 </select>
-                <select className="px-3 py-1 border rounded-md text-sm">
+                <select className="px-3 py-2 border rounded-md text-sm">
                   <option>All Years</option>
                   <option>Year 1</option>
                   <option>Year 2</option>
@@ -188,7 +172,7 @@ export default function EnhancedDashboard() {
               <div className="flex items-center bg-gray-100 rounded-lg p-1">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`flex items-center gap-1 px-3 py-1 rounded-md text-sm transition-colors ${
+                  className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm transition-colors ${
                     viewMode === 'grid' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-200'
                   }`}
                 >
@@ -197,7 +181,7 @@ export default function EnhancedDashboard() {
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`flex items-center gap-1 px-3 py-1 rounded-md text-sm transition-colors ${
+                  className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm transition-colors ${
                     viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-200'
                   }`}
                 >
@@ -214,7 +198,7 @@ export default function EnhancedDashboard() {
               <table className="w-full min-w-[800px]">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="text-left p-4 font-medium text-gray-600 w-20">Time</th>
+                    <th className="text-left p-4 font-medium text-gray-600 w-24">Time/Day</th>
                     {days.map(day => (
                       <th key={day} className="text-left p-4 font-medium text-gray-900">
                         {day}
@@ -230,34 +214,36 @@ export default function EnhancedDashboard() {
                       </td>
                       {days.map(day => {
                         const dayClasses = timetableData[day] || [];
-                        const classForTime = dayClasses.find(cls => 
-                          cls.time.includes(time) || 
-                          (timeIndex >= 1 && cls.time.includes(timeSlots[timeIndex - 1]))
-                        );
+                        const classForTime = isClassAtTime(dayClasses, timeIndex);
+                        
+                        // Check if this is the starting hour of a class
+                        const startingClass = classForTime && classForTime.start === 
+                          (parseInt(time.split(':')[0]) + (time.includes('PM') && time.split(':')[0] !== '12' ? 12 : 0));
                         
                         return (
-                          <td key={`${day}-${time}`} className="p-2 align-top">
-                            {classForTime && (
+                          <td key={`${day}-${time}`} className="p-1 align-top h-16 border-r">
+                            {startingClass && (
                               <div
-                                className="p-3 rounded-lg text-sm shadow-sm"
+                                className="p-3 rounded-lg text-sm shadow-sm h-full flex flex-col justify-between"
                                 style={{ 
                                   backgroundColor: `${classForTime.color}15`,
-                                  borderLeft: `4px solid ${classForTime.color}`
+                                  borderLeft: `4px solid ${classForTime.color}`,
+                                  gridRow: `span ${classForTime.duration}`
                                 }}
                               >
-                                <div className="font-semibold text-gray-900">{classForTime.code}</div>
-                                <div className="text-gray-700 text-xs mt-1">{classForTime.title}</div>
-                                <div className="flex items-center gap-1 text-xs text-gray-600 mt-2">
-                                  <Users size={10} />
-                                  {classForTime.lecturer}
+                                <div>
+                                  <div className="font-semibold text-gray-900">{classForTime.code}</div>
+                                  <div className="text-gray-700 text-xs mt-1 line-clamp-1">{classForTime.title}</div>
                                 </div>
-                                <div className="flex items-center gap-1 text-xs text-gray-600">
-                                  <DoorOpen size={10} />
-                                  {classForTime.room}
-                                </div>
-                                <div className="flex items-center gap-1 text-xs text-gray-600">
-                                  <Clock size={10} />
-                                  {classForTime.time}
+                                <div className="mt-2">
+                                  <div className="flex items-center gap-1 text-xs text-gray-600">
+                                    <Users size={10} />
+                                    <span className="truncate">{classForTime.lecturer}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1 text-xs text-gray-600">
+                                    <DoorOpen size={10} />
+                                    {classForTime.room}
+                                  </div>
                                 </div>
                               </div>
                             )}
@@ -270,11 +256,35 @@ export default function EnhancedDashboard() {
               </table>
             </div>
           </div>
+
+          {/* Timetable Legend */}
+          <div className="mt-6 bg-white rounded-lg p-4 shadow-sm">
+            <h3 className="text-sm font-medium text-gray-700 mb-3">Legend</h3>
+            <div className="flex flex-wrap gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-sm bg-blue-100 border-l-4 border-l-blue-500"></div>
+                <span className="text-sm text-gray-600">Computer Science</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-sm bg-emerald-100 border-l-4 border-l-emerald-500"></div>
+                <span className="text-sm text-gray-600">Data Structures</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-sm bg-amber-100 border-l-4 border-l-amber-500"></div>
+                <span className="text-sm text-gray-600">Database Systems</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-sm bg-red-100 border-l-4 border-l-red-500"></div>
+                <span className="text-sm text-gray-600">Intro to CS</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
+  // Rest of the dashboard code remains the same...
   return (
     <div style={{ padding: '24px', backgroundColor: '#f9fafb', minHeight: '100vh' }}>
       {/* Header */}
