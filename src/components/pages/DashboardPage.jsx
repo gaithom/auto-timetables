@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { 
   BookOpen, 
   Users, 
@@ -12,7 +13,9 @@ import {
   Settings
 } from "lucide-react";
 
-export default function EnhancedDashboard({ onNavigateToTimetable }) {
+export default function EnhancedDashboard() {
+  const navigate = useNavigate();
+
   return (
     <div className="page active">
       {/* Header */}
@@ -21,7 +24,7 @@ export default function EnhancedDashboard({ onNavigateToTimetable }) {
         <p>Welcome to Timetable Forge - Manage your academic scheduling</p>
         
         <button 
-          onClick={onNavigateToTimetable}
+          onClick={() => navigate("/timetables")}
           className="btn btn-primary"
           style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
         >

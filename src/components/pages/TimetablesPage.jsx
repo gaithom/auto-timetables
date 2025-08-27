@@ -1,12 +1,18 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Printer, Download, Filter, Grid, List, Calendar, FileText } from "lucide-react";
 import { exportToExcel } from "../../utils/exportExcel";
-import { exportToPDF } from "../../utils/exportPDF"; // Import PDF export function
+import { exportToPDF } from "../../utils/exportPDF";
 
 export default function TimetablesPage() {
+  const navigate = useNavigate();
   const [viewMode, setViewMode] = useState('grid');
   const [selectedProgram, setSelectedProgram] = useState('All Programs');
   const [selectedYear, setSelectedYear] = useState('All Years');
+
+  const handleNavigateToDashboard = () => {
+    navigate("/");
+  };
 
   // Sample timetable data in the format expected by the export functions
   const timetableDataForExport = {
@@ -416,6 +422,29 @@ export default function TimetablesPage() {
 
   return (
     <div>
+      {/* Back to Dashboard Button */}
+      <div style={{ marginBottom: '1rem' }}>
+        <button 
+          onClick={handleNavigateToDashboard}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            backgroundColor: '#2d5a27',
+            color: 'white',
+            border: 'none',
+            padding: '0.5rem 1rem',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            transition: 'all 0.3s'
+          }}
+          onMouseOver={(e) => e.target.style.backgroundColor = '#3a7a33'}
+          onMouseOut={(e) => e.target.style.backgroundColor = '#2d5a27'}
+        >
+          ← Back to Dashboard
+        </button>
+      </div>
+
       {/* Timetable Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>

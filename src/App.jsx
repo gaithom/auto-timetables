@@ -1,7 +1,14 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import { TimetableProvider } from "./context/TimetableContext";
-import { LayoutDashboard, BookOpen, Users, CalendarDays, DoorOpen, Calendar } from "lucide-react";
+import {
+  LayoutDashboard,
+  BookOpen,
+  Users,
+  CalendarDays,
+  DoorOpen,
+  Calendar,
+} from "lucide-react";
 
 import DashboardPage from "./components/pages/DashboardPage";
 import ProgramsPage from "./components/pages/ProgramsPage";
@@ -23,7 +30,14 @@ export default function App() {
   return (
     <TimetableProvider>
       <Router>
-        <div style={{ display: "flex", minHeight: "100vh", background: "#1e1e1e", color: "#ffffff" }}>
+        <div
+          style={{
+            display: "flex",
+            minHeight: "100vh",
+            background: "#1e1e1e",
+            color: "#ffffff",
+          }}
+        >
           {/* Sidebar */}
           <aside
             style={{
@@ -35,18 +49,21 @@ export default function App() {
               padding: "20px 16px",
             }}
           >
-            <h2 style={{ 
-              marginBottom: 32, 
-              fontWeight: "bold", 
-              fontSize: 18, 
-              color: "#4caf50",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px"
-            }}>
+            <h2
+              style={{
+                marginBottom: 32,
+                fontWeight: "bold",
+                fontSize: 18,
+                color: "#4caf50",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
               <Calendar size={20} />
               Auto Timetable
             </h2>
+
             <nav style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {navItems.map((item) => (
                 <NavLink
@@ -63,13 +80,13 @@ export default function App() {
                     color: isActive ? "#ffffff" : "#a0a0a0",
                     textDecoration: "none",
                     transition: "all 0.2s ease",
-                    border: isActive ? "1px solid #3a7a33" : "1px solid transparent",
+                    border: isActive
+                      ? "1px solid #3a7a33"
+                      : "1px solid transparent",
                   })}
                   onMouseEnter={(e) => {
-                    if (!e.currentTarget.className.includes("active")) {
-                      e.currentTarget.style.background = "#2d2d2d";
-                      e.currentTarget.style.color = "#ffffff";
-                    }
+                    e.currentTarget.style.background = "#2d2d2d";
+                    e.currentTarget.style.color = "#ffffff";
                   }}
                   onMouseLeave={(e) => {
                     if (!e.currentTarget.className.includes("active")) {
