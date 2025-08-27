@@ -16,6 +16,7 @@ export function TimetableProvider({ children }) {
   const addLecturer = (payload) => setLecturers((p) => [...p, { id: uuid(), ...payload }]);
   const addCohort = (payload) => setCohorts((p) => [...p, { id: uuid(), ...payload }]);
   const addRoom = (payload) => setRooms((p) => [...p, { id: uuid(), ...payload }]);
+  const addTimetable = (payload) => setTimetables((p) => [...p, { id: uuid(), ...payload }]);
 
   const removeById = (setter) => (id) => setter((arr) => arr.filter((x) => x.id !== id));
 
@@ -37,10 +38,12 @@ export function TimetableProvider({ children }) {
       addLecturer,
       addCohort,
       addRoom,
+      addTimetable,
       removeProgram: removeById(setPrograms),
       removeLecturer: removeById(setLecturers),
       removeCohort: removeById(setCohorts),
       removeRoom: removeById(setRooms),
+      removeTimetable: removeById(setTimetables),
       regenerate,
     }),
     [programs, lecturers, cohorts, rooms, timetables  , regenerate]

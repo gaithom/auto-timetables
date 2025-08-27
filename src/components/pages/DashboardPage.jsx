@@ -26,7 +26,7 @@ export default function EnhancedDashboard({ onNavigateToTimetable }) {
           style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
         >
           <Calendar size={16} />
-          Generate New Timetable
+          View Timetable
         </button>
       </div>
 

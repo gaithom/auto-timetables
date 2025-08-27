@@ -35,7 +35,7 @@ export function exportToPDF(timetable) {
     head,
     body,
     styles: { fontSize: 8 },
-    headStyles: { fillColor: [99, 102, 241] },
+    headStyles: { fillColor: [45, 90, 39] }, // Dark green color
     startY: 20,
   });
 

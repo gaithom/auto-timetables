@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import { TimetableProvider } from "./context/TimetableContext";
-import { LayoutDashboard, BookOpen, Users, CalendarDays, DoorOpen } from "lucide-react";
+import { LayoutDashboard, BookOpen, Users, CalendarDays, DoorOpen, Calendar } from "lucide-react";
 
 import DashboardPage from "./components/pages/DashboardPage";
 import ProgramsPage from "./components/pages/ProgramsPage";
@@ -17,6 +17,7 @@ export default function App() {
     { path: "/lecturers", label: "Lecturers", icon: <Users size={18} /> },
     { path: "/cohorts", label: "Cohorts", icon: <CalendarDays size={18} /> },
     { path: "/rooms", label: "Rooms", icon: <DoorOpen size={18} /> },
+    { path: "/timetables", label: "Timetables", icon: <Calendar size={18} /> },
   ];
 
   return (
@@ -28,13 +29,24 @@ export default function App() {
             style={{
               width: 240,
               background: "#1e1e1e",
-              borderRight: "1px solidrgb(0, 13, 39)",
+              borderRight: "1px solid #2d2d2d",
               display: "flex",
               flexDirection: "column",
               padding: "20px 16px",
             }}
           >
-            <h2 style={{ marginBottom: 32, fontWeight: "bold", fontSize: 18 }}>Auto Timetable</h2>
+            <h2 style={{ 
+              marginBottom: 32, 
+              fontWeight: "bold", 
+              fontSize: 18, 
+              color: "#4caf50",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px"
+            }}>
+              <Calendar size={20} />
+              Auto Timetable
+            </h2>
             <nav style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {navItems.map((item) => (
                 <NavLink
@@ -47,11 +59,24 @@ export default function App() {
                     padding: "10px 12px",
                     borderRadius: 8,
                     fontWeight: 500,
-                    background: isActive ? "#2b5a27" : "#1e1e1e",
-                    color: isActive ? "#1e1e1e" : "#fff",
+                    background: isActive ? "#2d5a27" : "transparent",
+                    color: isActive ? "#ffffff" : "#a0a0a0",
                     textDecoration: "none",
                     transition: "all 0.2s ease",
+                    border: isActive ? "1px solid #3a7a33" : "1px solid transparent",
                   })}
+                  onMouseEnter={(e) => {
+                    if (!e.currentTarget.className.includes("active")) {
+                      e.currentTarget.style.background = "#2d2d2d";
+                      e.currentTarget.style.color = "#ffffff";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!e.currentTarget.className.includes("active")) {
+                      e.currentTarget.style.background = "transparent";
+                      e.currentTarget.style.color = "#a0a0a0";
+                    }
+                  }}
                 >
                   {item.icon}
                   {item.label}
@@ -61,7 +86,7 @@ export default function App() {
           </aside>
 
           {/* Main Content */}
-          <main style={{ flex: 1, padding: 24 }}>
+          <main style={{ flex: 1, padding: 24, overflow: "auto" }}>
             <Routes>
               <Route path="/" element={<DashboardPage />} />
               <Route path="/programs" element={<ProgramsPage />} />
