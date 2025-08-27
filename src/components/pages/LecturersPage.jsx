@@ -1,33 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { User, Clock, BookOpen, Plus, Trash2, Edit2, Save, X } from "lucide-react";
-
-// Mock context for demonstration
-const mockLecturers = [
-  {
-    id: 1,
-    name: "Dr. Jane Smith",
-    courses: ["Mathematics", "Calculus"],
-    availability: {
-      monday: ["08:00-09:00", "09:00-10:00"],
-      tuesday: ["10:00-11:00", "11:00-12:00"],
-      wednesday: [],
-      thursday: ["14:00-15:00", "15:00-16:00"],
-      friday: ["08:00-09:00", "13:00-14:00"]
-    }
-  },
-  {
-    id: 2,
-    name: "Prof. John Davis",
-    courses: ["Physics", "Advanced Physics"],
-    availability: {
-      monday: ["10:00-11:00", "11:00-12:00"],
-      tuesday: ["08:00-09:00", "09:00-10:00"],
-      wednesday: ["14:00-15:00", "15:00-16:00"],
-      thursday: [],
-      friday: ["10:00-11:00", "11:00-12:00"]
-    }
-  }
-];
 
 const timeSlots = [
   "08:00-09:00", "09:00-10:00", "10:00-11:00", "11:00-12:00",
@@ -36,6 +8,26 @@ const timeSlots = [
 
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
 const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+
+// Function to load lecturers from localStorage
+const loadLecturersFromStorage = () => {
+  try {
+    const saved = localStorage.getItem('lecturers');
+    return saved ? JSON.parse(saved) : [];
+  } catch (error) {
+    console.error("Error loading lecturers from storage:", error);
+    return [];
+  }
+};
+
+// Function to save lecturers to localStorage
+const saveLecturersToStorage = (lecturers) => {
+  try {
+    localStorage.setItem('lecturers', JSON.stringify(lecturers));
+  } catch (error) {
+    console.error("Error saving lecturers to storage:", error);
+  }
+};
 
 function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
   const [formData, setFormData] = useState({
@@ -340,8 +332,19 @@ function LecturerCard({ lecturer, onEdit, onDelete }) {
 }
 
 export default function LecturersPage() {
-  const [lecturers, setLecturers] = useState(mockLecturers);
+  const [lecturers, setLecturers] = useState([]);
   const [editingLecturer, setEditingLecturer] = useState(null);
+
+  // Load lecturers from localStorage on component mount
+  useEffect(() => {
+    const savedLecturers = loadLecturersFromStorage();
+    setLecturers(savedLecturers);
+  }, []);
+
+  // Save lecturers to localStorage whenever they change
+  useEffect(() => {
+    saveLecturersToStorage(lecturers);
+  }, [lecturers]);
 
   const handleSaveLecturer = (lecturer) => {
     if (editingLecturer) {

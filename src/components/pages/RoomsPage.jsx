@@ -1,13 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Trash2, Plus, Users, Search, Building2 } from 'lucide-react';
 
-// Mock context and form component for demonstration
+// Function to load rooms from localStorage
+const loadRoomsFromStorage = () => {
+  try {
+    const saved = localStorage.getItem('rooms');
+    return saved ? JSON.parse(saved) : [];
+  } catch (error) {
+    console.error("Error loading rooms from storage:", error);
+    return [];
+  }
+};
+
+// Function to save rooms to localStorage
+const saveRoomsToStorage = (rooms) => {
+  try {
+    localStorage.setItem('rooms', JSON.stringify(rooms));
+  } catch (error) {
+    console.error("Error saving rooms to storage:", error);
+  }
+};
+
+// Custom hook for room management
 const useTimetable = () => {
-  const [rooms, setRooms] = useState([
-    { id: 1, name: 'Room A', capacity: 50 },
-    { id: 2, name: 'Room B', capacity: 40 },
-    { id: 3, name: 'Lab 1', capacity: 30 }
-  ]);
+  const [rooms, setRooms] = useState([]);
+
+  // Load rooms from localStorage on component mount
+  useEffect(() => {
+    const savedRooms = loadRoomsFromStorage();
+    setRooms(savedRooms);
+  }, []);
+
+  // Save rooms to localStorage whenever they change
+  useEffect(() => {
+    saveRoomsToStorage(rooms);
+  }, [rooms]);
 
   const removeRoom = (id) => {
     setRooms(prev => prev.filter(room => room.id !== id));
