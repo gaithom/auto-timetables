@@ -6,8 +6,6 @@ import {
   DoorOpen,
   Calendar,
   CheckCircle,
-  AlertTriangle,
-  Clock,
   Plus,
   UserPlus,
   Settings
@@ -150,50 +148,8 @@ export default function EnhancedDashboard() {
           <p>Latest system updates and notifications</p>
           
           <div className="activities-list">
-            {/* Activity 1 */}
-            <div className="activity-item">
-              <div className="activity-icon success">
-                <CheckCircle size={16} color="#4caf50" />
-              </div>
-              <div>
-                <div className="activity-title">Computer Science timetable generated successfully</div>
-                <div className="activity-time">2 minutes ago</div>
-              </div>
-            </div>
-
-            {/* Activity 2 */}
-            <div className="activity-item">
-              <div className="activity-icon warning">
-                <AlertTriangle size={16} color="#ff9800" />
-              </div>
-              <div>
-                <div className="activity-title">Scheduling conflict detected in Business Administration</div>
-                <div className="activity-time">15 minutes ago</div>
-              </div>
-            </div>
-
-            {/* Activity 3 */}
-            <div className="activity-item">
-              <div className="activity-icon info">
-                <Clock size={16} color="#4caf50" />
-              </div>
-              <div>
-                <div className="activity-title">New lecturer Dr. Smith added to system</div>
-                <div className="activity-time">1 hour ago</div>
-              </div>
-            </div>
-
-            {/* Activity 4 */}
-            <div className="activity-item">
-              <div className="activity-icon success">
-                <CheckCircle size={16} color="#4caf50" />
-              </div>
-              <div>
-                <div className="activity-title">Room allocation updated for Engineering program</div>
-                <div className="activity-time">2 hours ago</div>
-              </div>
-            </div>
-          </div>
+            
+             </div>
         </div>
       </div>
 
