@@ -1,50 +1,64 @@
-import React, { useState, useEffect } from "react";
+/* global globalThis */
+import React, { useMemo, useState } from "react";
+import PropTypes from "prop-types";
 import { User, Clock, BookOpen, Plus, Trash2, Edit2, Save, X } from "lucide-react";
+import { useTimetable } from "../../context/TimetableContext";
+import { DAYS as TIMETABLE_DAYS, SLOTS as TIMETABLE_SLOTS } from "../../utils/timetableGenerator";
 
-const timeSlots = [
-  "08:00-09:00", "09:00-10:00", "10:00-11:00", "11:00-12:00",
-  "12:00-13:00", "13:00-14:00", "14:00-15:00", "15:00-16:00"
-];
+const dayLabels = TIMETABLE_DAYS;
 
-const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
-const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-
-// Function to load lecturers from localStorage
-const loadLecturersFromStorage = () => {
-  try {
-    const saved = localStorage.getItem('lecturers');
-    return saved ? JSON.parse(saved) : [];
-  } catch (error) {
-    console.error("Error loading lecturers from storage:", error);
-    return [];
+const toLegacyKey = (day) => {
+  switch (day) {
+    case "Mon":
+      return "monday";
+    case "Tue":
+      return "tuesday";
+    case "Wed":
+      return "wednesday";
+    case "Thu":
+      return "thursday";
+    case "Fri":
+      return "friday";
+    default:
+      return day.toLowerCase();
   }
 };
 
-// Function to save lecturers to localStorage
-const saveLecturersToStorage = (lecturers) => {
-  try {
-    localStorage.setItem('lecturers', JSON.stringify(lecturers));
-  } catch (error) {
-    console.error("Error saving lecturers to storage:", error);
-  }
-};
+const normalizeAvailability = (source = {}) =>
+  TIMETABLE_DAYS.reduce((acc, day) => {
+    const legacy = toLegacyKey(day);
+    acc[day] = Array.isArray(source[day])
+      ? [...source[day]]
+      : Array.isArray(source[legacy])
+        ? [...source[legacy]]
+        : [];
+    return acc;
+  }, {});
 
 function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => ({
     name: editingLecturer?.name || "",
     courses: editingLecturer?.courses?.join(", ") || "",
-    availability: editingLecturer?.availability || days.reduce((acc, day) => ({ ...acc, [day]: [] }), {})
-  });
+    availability: normalizeAvailability(editingLecturer?.availability),
+  }));
+
+  React.useEffect(() => {
+    setFormData({
+      name: editingLecturer?.name || "",
+      courses: editingLecturer?.courses?.join(", ") || "",
+      availability: normalizeAvailability(editingLecturer?.availability),
+    });
+  }, [editingLecturer]);
 
   const handleAvailabilityChange = (day, timeSlot, checked) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       availability: {
         ...prev.availability,
         [day]: checked
           ? [...prev.availability[day], timeSlot]
-          : prev.availability[day].filter(slot => slot !== timeSlot)
-      }
+          : prev.availability[day].filter((slot) => slot !== timeSlot),
+      },
     }));
   };
 
@@ -58,8 +72,8 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
     const lecturer = {
       id: editingLecturer?.id || Date.now(),
       name: formData.name,
-      courses: formData.courses.split(",").map(c => c.trim()).filter(c => c),
-      availability: formData.availability
+      courses: formData.courses.split(",").map((c) => c.trim()).filter(Boolean),
+      availability: normalizeAvailability(formData.availability),
     };
     
     onSave(lecturer);
@@ -68,7 +82,7 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
       setFormData({
         name: "",
         courses: "",
-        availability: days.reduce((acc, day) => ({ ...acc, [day]: [] }), {})
+        availability: normalizeAvailability(),
       });
     }
   };
@@ -100,8 +114,9 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
       <div style={{ marginBottom: '24px' }}>
         <div className="form-grid">
           <div className="form-group">
-            <label>Lecturer Name</label>
+            <label htmlFor="lecturerName">Lecturer Name</label>
             <input
+              id="lecturerName"
               type="text"
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
@@ -111,8 +126,9 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
           </div>
 
           <div className="form-group">
-            <label>Courses Taught (comma-separated)</label>
+            <label htmlFor="lecturerCourses">Courses Taught (comma-separated)</label>
             <input
+              id="lecturerCourses"
               type="text"
               value={formData.courses}
               onChange={(e) => setFormData(prev => ({ ...prev, courses: e.target.value }))}
@@ -122,7 +138,7 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
         </div>
 
         <div>
-          <label style={{
+          <p style={{
             display: 'block',
             fontSize: '14px',
             fontWeight: '500',
@@ -130,7 +146,7 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
             marginBottom: '16px'
           }}>
             Availability Schedule
-          </label>
+          </p>
           <div className="availability-table-container">
             <div style={{ overflowX: 'auto' }}>
               <table className="availability-table">
@@ -143,21 +159,24 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
                       color: 'var(--text-secondary)',
                       padding: '8px 12px'
                     }}>Time</th>
-                    {dayLabels.map(day => (
-                      <th key={day} style={{
+                    {dayLabels.map((day) => (
+                      <th
+                        key={day}
+                        style={{
                         textAlign: 'center',
                         fontSize: '14px',
                         fontWeight: '500',
                         color: 'var(--text-secondary)',
                         padding: '8px 12px'
-                      }}>
+                        }}
+                      >
                         {day}
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {timeSlots.map(timeSlot => (
+                  {TIMETABLE_SLOTS.map((timeSlot) => (
                     <tr key={timeSlot} style={{ borderTop: '1px solid var(--border-color)' }}>
                       <td style={{
                         fontSize: '14px',
@@ -167,11 +186,11 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
                       }}>
                         {timeSlot}
                       </td>
-                      {days.map(day => (
+                      {dayLabels.map((day) => (
                         <td key={day} style={{ textAlign: 'center', padding: '8px 12px' }}>
                           <input
                             type="checkbox"
-                            checked={formData.availability[day].includes(timeSlot)}
+                            checked={formData.availability[day]?.includes(timeSlot)}
                             onChange={(e) => handleAvailabilityChange(day, timeSlot, e.target.checked)}
                             style={{
                               width: '16px',
@@ -213,7 +232,8 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
 }
 
 function LecturerCard({ lecturer, onEdit, onDelete }) {
-  const totalSlots = Object.values(lecturer.availability).flat().length;
+  const availability = useMemo(() => normalizeAvailability(lecturer.availability), [lecturer.availability]);
+  const totalSlots = Object.values(availability).flat().length;
   
   return (
     <div className="data-card">
@@ -284,7 +304,7 @@ function LecturerCard({ lecturer, onEdit, onDelete }) {
           gridTemplateColumns: 'repeat(5, 1fr)',
           gap: '8px'
         }}>
-          {days.map((day, index) => (
+          {dayLabels.map((day, index) => (
             <div key={day} style={{ textAlign: 'center' }}>
               <div style={{
                 fontSize: '12px',
@@ -299,7 +319,7 @@ function LecturerCard({ lecturer, onEdit, onDelete }) {
                 color: '#a0a0a0',
                 marginBottom: '4px'
               }}>
-                {lecturer.availability[day].length} slots
+                {availability[day].length} slots
               </div>
               <div style={{
                 width: '100%',
@@ -314,7 +334,7 @@ function LecturerCard({ lecturer, onEdit, onDelete }) {
                     background: 'linear-gradient(90deg, #2d5a27 0%, #3a7a33 100%)',
                     borderRadius: '9999px',
                     transition: 'all 0.3s ease',
-                    width: `${(lecturer.availability[day].length / timeSlots.length) * 100}%`
+                    width: `${(availability[day].length / TIMETABLE_SLOTS.length) * 100}%`
                   }}
                 />
               </div>
@@ -327,27 +347,16 @@ function LecturerCard({ lecturer, onEdit, onDelete }) {
 }
 
 export default function LecturersPage() {
-  const [lecturers, setLecturers] = useState([]);
+  const { lecturers, addLecturer, updateLecturer, removeLecturer } = useTimetable();
   const [editingLecturer, setEditingLecturer] = useState(null);
-
-  // Load lecturers from localStorage on component mount
-  useEffect(() => {
-    const savedLecturers = loadLecturersFromStorage();
-    setLecturers(savedLecturers);
-  }, []);
-
-  // Save lecturers to localStorage whenever they change
-  useEffect(() => {
-    saveLecturersToStorage(lecturers);
-  }, [lecturers]);
 
   const handleSaveLecturer = (lecturer) => {
     if (editingLecturer) {
-      setLecturers(prev => prev.map(l => l.id === lecturer.id ? lecturer : l));
+      updateLecturer(lecturer.id, lecturer);
       setEditingLecturer(null);
       alert('Lecturer updated successfully!');
     } else {
-      setLecturers(prev => [...prev, lecturer]);
+      addLecturer(lecturer);
       alert('Lecturer added successfully!');
     }
   };
@@ -357,8 +366,8 @@ export default function LecturersPage() {
   };
 
   const handleDeleteLecturer = (id) => {
-    if (window.confirm("Are you sure you want to delete this lecturer?")) {
-      setLecturers(prev => prev.filter(l => l.id !== id));
+    if (globalThis.confirm("Are you sure you want to delete this lecturer?")) {
+      removeLecturer(id);
     }
   };
 
@@ -369,8 +378,13 @@ export default function LecturersPage() {
   // Statistics
   const totalLecturers = lecturers.length;
   const totalCourses = lecturers.reduce((sum, lecturer) => sum + lecturer.courses.length, 0);
-  const avgAvailability = lecturers.length > 0 
-    ? Math.round(lecturers.reduce((sum, lecturer) => sum + Object.values(lecturer.availability).flat().length, 0) / lecturers.length) 
+  const avgAvailability = lecturers.length > 0
+    ? Math.round(
+        lecturers.reduce(
+          (sum, lecturer) => sum + Object.values(normalizeAvailability(lecturer.availability)).flat().length,
+          0
+        ) / lecturers.length
+      )
     : 0;
 
   return (
@@ -458,3 +472,25 @@ export default function LecturersPage() {
     </div>
   );
 }
+
+LecturerForm.propTypes = {
+  onSave: PropTypes.func.isRequired,
+  editingLecturer: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    name: PropTypes.string,
+    courses: PropTypes.arrayOf(PropTypes.string),
+    availability: PropTypes.object,
+  }),
+  onCancel: PropTypes.func,
+};
+
+LecturerCard.propTypes = {
+  lecturer: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    name: PropTypes.string.isRequired,
+    courses: PropTypes.arrayOf(PropTypes.string),
+    availability: PropTypes.object.isRequired,
+  }).isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+};

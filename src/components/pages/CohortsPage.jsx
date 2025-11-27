@@ -1,10 +1,8 @@
+/* global globalThis */
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { Users, Plus, Trash2, Edit2, Save, X, GraduationCap, Hash } from "lucide-react";
-
-// Mock context for demonstration
-const mockCohorts = [
-  // Sample data would go here
-];
+import { useTimetable } from "../../context/TimetableContext";
 
 function CohortForm({ onSave, editingCohort = null, onCancel = null }) {
   const [formData, setFormData] = useState({
@@ -29,9 +27,9 @@ function CohortForm({ onSave, editingCohort = null, onCancel = null }) {
     const cohort = {
       id: editingCohort?.id || Date.now(),
       name: formData.name,
-      size: parseInt(formData.size),
+      size: Number.parseInt(formData.size, 10),
       program: formData.program,
-      year: parseInt(formData.year) || 1,
+      year: Number.parseInt(formData.year, 10) || 1,
       semester: formData.semester
     };
     
@@ -168,14 +166,7 @@ function CohortCard({ cohort, onEdit, onDelete }) {
       transition: 'box-shadow 0.15s ease-in-out',
       position: 'relative',
       overflow: 'hidden'
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.boxShadow = '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)';
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.boxShadow = '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)';
-    }}
-    >
+    }}>
       {/* Background Pattern */}
       <div style={{
         position: 'absolute',
@@ -237,14 +228,6 @@ function CohortCard({ cohort, onEdit, onDelete }) {
               cursor: 'pointer',
               transition: 'all 0.15s ease-in-out'
             }}
-            onMouseOver={(e) => {
-              e.target.style.backgroundColor = '#f0fdf4';
-              e.target.style.color = '#16a34a';
-            }}
-            onMouseOut={(e) => {
-              e.target.style.backgroundColor = 'transparent';
-              e.target.style.color = '#6b7280';
-            }}
             aria-label="Edit cohort"
           >
             <Edit2 size={20} />
@@ -259,14 +242,6 @@ function CohortCard({ cohort, onEdit, onDelete }) {
               color: '#6b7280',
               cursor: 'pointer',
               transition: 'all 0.15s ease-in-out'
-            }}
-            onMouseOver={(e) => {
-              e.target.style.backgroundColor = '#fef2f2';
-              e.target.style.color = '#dc2626';
-            }}
-            onMouseOut={(e) => {
-              e.target.style.backgroundColor = 'transparent';
-              e.target.style.color = '#6b7280';
             }}
             aria-label="Delete cohort"
           >
@@ -298,16 +273,16 @@ function CohortCard({ cohort, onEdit, onDelete }) {
 }
 
 export default function CohortsPage() {
-  const [cohorts, setCohorts] = useState(mockCohorts);
+  const { cohorts, addCohort, updateCohort, removeCohort } = useTimetable();
   const [editingCohort, setEditingCohort] = useState(null);
 
   const handleSaveCohort = (cohort) => {
     if (editingCohort) {
-      setCohorts(prev => prev.map(c => c.id === cohort.id ? cohort : c));
+      updateCohort(cohort.id, cohort);
       setEditingCohort(null);
       alert('Cohort updated successfully!');
     } else {
-      setCohorts(prev => [...prev, cohort]);
+      addCohort(cohort);
       alert('Cohort added successfully!');
     }
   };
@@ -317,8 +292,8 @@ export default function CohortsPage() {
   };
 
   const handleDeleteCohort = (id) => {
-    if (window.confirm("Are you sure you want to delete this cohort?")) {
-      setCohorts(prev => prev.filter(c => c.id !== id));
+    if (globalThis.confirm("Are you sure you want to delete this cohort?")) {
+      removeCohort(id);
       alert('Cohort deleted successfully!');
     }
   };
@@ -415,3 +390,29 @@ export default function CohortsPage() {
     </div>
   );
 }
+
+CohortForm.propTypes = {
+  onSave: PropTypes.func.isRequired,
+  editingCohort: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    name: PropTypes.string,
+    size: PropTypes.number,
+    program: PropTypes.string,
+    year: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    semester: PropTypes.string,
+  }),
+  onCancel: PropTypes.func,
+};
+
+CohortCard.propTypes = {
+  cohort: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    name: PropTypes.string.isRequired,
+    size: PropTypes.number.isRequired,
+    program: PropTypes.string,
+    year: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    semester: PropTypes.string,
+  }).isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+};

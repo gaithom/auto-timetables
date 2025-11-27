@@ -1,420 +1,248 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Printer, Download, Filter, Grid, List, Calendar, FileText } from "lucide-react";
+import { Download, Filter, Grid, List, Calendar, FileText, RotateCw } from "lucide-react";
 import { exportToExcel } from "../../utils/exportExcel";
 import { exportToPDF } from "../../utils/exportPDF";
+import { useTimetable } from "../../context/TimetableContext";
 
 export default function TimetablesPage() {
   const navigate = useNavigate();
-  const [viewMode, setViewMode] = useState('grid');
-  const [selectedProgram, setSelectedProgram] = useState('All Programs');
-  const [selectedYear, setSelectedYear] = useState('All Years');
+  const { timetable, programs, cohorts, DAYS, SLOTS, regenerate } = useTimetable();
+  const [viewMode, setViewMode] = useState("grid");
+  const [selectedProgram, setSelectedProgram] = useState("All Programs");
+  const [selectedCohort, setSelectedCohort] = useState("All Cohorts");
 
-  const handleNavigateToDashboard = () => {
-    navigate("/");
-  };
-
-  // Sample timetable data in the format expected by the export functions
-  const timetableDataForExport = {
-    Monday: {
-      "8:00-9:00": [],
-      "9:00-10:00": [
-        {
-          course: { code: "CS101", name: "Introduction to Computer Science" },
-          cohort: { name: "CS Year 1" },
-          lecturer: { name: "Dr. Sarah Johnson" },
-          room: { name: "LH001" }
-        }
-      ],
-      "10:00-11:00": [
-        {
-          course: { code: "CS101", name: "Introduction to Computer Science" },
-          cohort: { name: "CS Year 1" },
-          lecturer: { name: "Dr. Sarah Johnson" },
-          room: { name: "LH001" }
-        }
-      ],
-      "11:00-12:00": [
-        {
-          course: { code: "MATH201", name: "Advanced Mathematics" },
-          cohort: { name: "CS Year 2" },
-          lecturer: { name: "Prof. Michael Chen" },
-          room: { name: "LH002" }
-        }
-      ],
-      "12:00-13:00": [],
-      "13:00-14:00": [],
-      "14:00-15:00": [
-        {
-          course: { code: "CS201", name: "Data Structures and Algorithms" },
-          cohort: { name: "CS Year 2" },
-          lecturer: { name: "Dr. Sarah Johnson" },
-          room: { name: "LH002" }
-        }
-      ],
-      "15:00-16:00": [
-        {
-          course: { code: "CS201", name: "Data Structures and Algorithms" },
-          cohort: { name: "CS Year 2" },
-          lecturer: { name: "Dr. Sarah Johnson" },
-          room: { name: "LH002" }
-        }
-      ],
-      "16:00-17:00": []
-    },
-    Tuesday: {
-      "8:00-9:00": [],
-      "9:00-10:00": [],
-      "10:00-11:00": [
-        {
-          course: { code: "CS301L", name: "Database Systems Lab" },
-          cohort: { name: "CS Year 3" },
-          lecturer: { name: "Prof. Michael Chen" },
-          room: { name: "LAB201" }
-        }
-      ],
-      "11:00-12:00": [
-        {
-          course: { code: "CS301L", name: "Database Systems Lab" },
-          cohort: { name: "CS Year 3" },
-          lecturer: { name: "Prof. Michael Chen" },
-          room: { name: "LAB201" }
-        }
-      ],
-      "12:00-13:00": [
-        {
-          course: { code: "CS301L", name: "Database Systems Lab" },
-          cohort: { name: "CS Year 3" },
-          lecturer: { name: "Prof. Michael Chen" },
-          room: { name: "LAB201" }
-        }
-      ],
-      "13:00-14:00": [],
-      "14:00-15:00": [],
-      "15:00-16:00": [],
-      "16:00-17:00": []
-    },
-    Wednesday: {
-      "8:00-9:00": [],
-      "9:00-10:00": [],
-      "10:00-11:00": [],
-      "11:00-12:00": [
-        {
-          course: { code: "CS101", name: "Introduction to Computer Science" },
-          cohort: { name: "CS Year 1" },
-          lecturer: { name: "Dr. Sarah Johnson" },
-          room: { name: "SR105" }
-        }
-      ],
-      "12:00-13:00": [],
-      "13:00-14:00": [],
-      "14:00-15:00": [],
-      "15:00-16:00": [],
-      "16:00-17:00": []
-    },
-    Thursday: {
-      "8:00-9:00": [],
-      "9:00-10:00": [
-        {
-          course: { code: "CS201", name: "Data Structures and Algorithms" },
-          cohort: { name: "CS Year 2" },
-          lecturer: { name: "Prof. Michael Chen" },
-          room: { name: "LH001" }
-        }
-      ],
-      "10:00-11:00": [
-        {
-          course: { code: "CS201", name: "Data Structures and Algorithms" },
-          cohort: { name: "CS Year 2" },
-          lecturer: { name: "Prof. Michael Chen" },
-          room: { name: "LH001" }
-        }
-      ],
-      "11:00-12:00": [],
-      "12:00-13:00": [],
-      "13:00-14:00": [],
-      "14:00-15:00": [],
-      "15:00-16:00": [],
-      "16:00-17:00": []
-    },
-    Friday: {
-      "8:00-9:00": [],
-      "9:00-10:00": [],
-      "10:00-11:00": [],
-      "11:00-12:00": [],
-      "12:00-13:00": [],
-      "13:00-14:00": [],
-      "14:00-15:00": [
-        {
-          course: { code: "CS301L", name: "Database Systems Lab" },
-          cohort: { name: "CS Year 3" },
-          lecturer: { name: "Prof. Michael Chen" },
-          room: { name: "LAB201" }
-        }
-      ],
-      "15:00-16:00": [
-        {
-          course: { code: "CS301L", name: "Database Systems Lab" },
-          cohort: { name: "CS Year 3" },
-          lecturer: { name: "Prof. Michael Chen" },
-          room: { name: "LAB201" }
-        }
-      ],
-      "16:00-17:00": [
-        {
-          course: { code: "CS301L", name: "Database Systems Lab" },
-          cohort: { name: "CS Year 3" },
-          lecturer: { name: "Prof. Michael Chen" },
-          room: { name: "LAB201" }
-        }
-      ]
-    }
-  };
-
-  // Sample timetable data for display
-  const timetableData = {
-    Monday: [
-      { 
-        code: 'CS101', 
-        title: 'Introduction to Computer Science', 
-        lecturer: 'Dr. Sarah Johnson', 
-        room: 'LH001', 
-        time: '9:00 AM - 11:00 AM',
-        color: '#3a7a33',
-        start: 9,
-        end: 11,
-        duration: 2
-      },
-      { 
-        code: 'CS201', 
-        title: 'Data Structures and Algorithms', 
-        lecturer: 'Dr. Sarah Johnson', 
-        room: 'LH002', 
-        time: '2:00 PM - 4:00 PM',
-        color: '#4caf50',
-        start: 14,
-        end: 16,
-        duration: 2
-      }
-    ],
-    Tuesday: [
-      { 
-        code: 'CS301L', 
-        title: 'Database Systems Lab', 
-        lecturer: 'Prof. Michael Chen', 
-        room: 'LAB201', 
-        time: '10:00 AM - 1:00 PM',
-        color: '#2d5a27',
-        start: 10,
-        end: 13,
-        duration: 3
-      }
-    ],
-    Wednesday: [
-      { 
-        code: 'CS101', 
-        title: 'Introduction to Computer Science', 
-        lecturer: 'Dr. Sarah Johnson', 
-        room: 'SR105', 
-        time: '11:00 AM - 12:00 PM',
-        color: '#3a7a33',
-        start: 11,
-        end: 12,
-        duration: 1
-      }
-    ],
-    Thursday: [
-      { 
-        code: 'CS201', 
-        title: 'Data Structures and Algorithms', 
-        lecturer: 'Prof. Michael Chen', 
-        room: 'LH001', 
-        time: '9:00 AM - 11:00 AM',
-        color: '#4caf50',
-        start: 9,
-        end: 11,
-        duration: 2
-      }
-    ],
-    Friday: [
-      { 
-        code: 'CS301L', 
-        title: 'Database Systems Lab', 
-        lecturer: 'Prof. Michael Chen', 
-        room: 'LAB201', 
-        time: '2:00 PM - 5:00 PM',
-        color: '#2d5a27',
-        start: 14,
-        end: 17,
-        duration: 3
-      }
-    ]
-  };
-
-  const timeSlots = [
-    '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', 
-    '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'
-  ];
-
-  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-  
-  // Function to check if a class occurs at a specific time
-  const isClassAtTime = (dayClasses, timeIndex) => {
-    const time = timeSlots[timeIndex];
-    const hour = parseInt(time.split(':')[0]) + (time.includes('PM') && time.split(':')[0] !== '12' ? 12 : 0);
-    
-    return dayClasses.find(cls => {
-      const classStartHour = cls.start;
-      return hour >= classStartHour && hour < cls.end;
+  const allSessions = useMemo(() => {
+    const sessions = [];
+    DAYS.forEach((day) => {
+      const slots = timetable?.[day] || {};
+      SLOTS.forEach((slot) => {
+        const slotSessions = slots?.[slot] || [];
+        slotSessions.forEach((entry) => {
+          sessions.push({
+            ...entry,
+            day,
+            slot,
+            programName: entry.program?.name ?? "Program",
+            cohortName: entry.cohort?.name ?? "Cohort",
+          });
+        });
+      });
     });
+    return sessions;
+  }, [timetable, DAYS, SLOTS]);
+
+  const filteredSessions = useMemo(() => {
+    return allSessions.filter((session) => {
+      const matchesProgram =
+        selectedProgram === "All Programs" || session.programName === selectedProgram;
+      const matchesCohort =
+        selectedCohort === "All Cohorts" || session.cohortName === selectedCohort;
+      return matchesProgram && matchesCohort;
+    });
+  }, [allSessions, selectedProgram, selectedCohort]);
+
+  const gridLookup = useMemo(() => {
+    const lookup = {};
+    DAYS.forEach((day) => {
+      lookup[day] = {};
+      SLOTS.forEach((slot) => {
+        lookup[day][slot] = [];
+      });
+    });
+    filteredSessions.forEach((session) => {
+      if (!lookup[session.day]) lookup[session.day] = {};
+      if (!lookup[session.day][session.slot]) lookup[session.day][session.slot] = [];
+      lookup[session.day][session.slot].push(session);
+    });
+    return lookup;
+  }, [filteredSessions, DAYS, SLOTS]);
+
+  const stats = {
+    scheduled: filteredSessions.length,
+    totalSlots: DAYS.length * SLOTS.length,
+    unplaced: timetable?.__unplaced?.length || 0,
   };
 
-  // Function to handle Excel export
-  const handleExportToExcel = () => {
-    exportToExcel(timetableDataForExport);
+  const handleExportToExcel = () => exportToExcel(timetable);
+  const handleExportToPDF = () => exportToPDF(timetable);
+
+  const programOptions = ["All Programs", ...programs.map((prog) => prog.name)];
+  const cohortOptions = ["All Cohorts", ...cohorts.map((c) => c.name)];
+
+  const renderSlotSessions = (slotSessions) => {
+    if (slotSessions.length === 0) {
+      return <div style={{ color: "var(--text-secondary)", fontSize: 12 }}>—</div>;
+    }
+
+    return slotSessions.map((session) => (
+      <div
+        key={`${session.course.code}-${session.cohort.id}`}
+        style={{
+          backgroundColor: "var(--surface)",
+          borderLeft: "4px solid var(--accent-primary)",
+          borderRadius: 6,
+          padding: "0.5rem",
+          marginBottom: "0.5rem",
+        }}
+      >
+        <strong style={{ color: "var(--accent-strong)" }}>
+          {session.course.code} {session.course.name}
+        </strong>
+        <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>
+          {session.cohortName} · {session.lecturer.name}
+        </div>
+        <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>
+          Room {session.room.name}
+        </div>
+      </div>
+    ));
   };
 
-  // Function to handle PDF export
-  const handleExportToPDF = () => {
-    exportToPDF(timetableDataForExport);
-  };
-
-  // Function to render the grid view
   const renderGridView = () => {
+    const rows = [];
+    for (const slot of SLOTS) {
+      const cells = [];
+      for (const day of DAYS) {
+        const slotSessions = gridLookup[day]?.[slot] || [];
+        cells.push(
+          <td
+            key={`${day}-${slot}`}
+            style={{
+              border: "1px solid var(--border-color)",
+              padding: "0.8rem",
+              backgroundColor: "var(--surface-muted)",
+              minHeight: 80,
+              verticalAlign: "top",
+            }}
+          >
+            {renderSlotSessions(slotSessions)}
+          </td>
+        );
+      }
+
+      rows.push(
+        <tr key={slot}>
+          <td
+            style={{
+              border: "1px solid var(--border-color)",
+              padding: "0.8rem",
+              textAlign: "center",
+              fontWeight: "bold",
+              backgroundColor: "var(--table-header-bg)",
+              color: "var(--table-header-text)",
+            }}
+          >
+            {slot}
+          </td>
+          {cells}
+        </tr>
+      );
+    }
+
     return (
-      <div style={{
-        backgroundColor: 'var(--surface)',
-        borderRadius: '8px',
-        padding: '1.5rem',
-        marginBottom: '2rem',
-        overflowX: 'auto',
-        border: '1px solid var(--border-color)'
-      }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
+      <div
+        style={{
+          backgroundColor: "var(--surface)",
+          borderRadius: "8px",
+          padding: "1.5rem",
+          marginBottom: "2rem",
+          overflowX: "auto",
+          border: "1px solid var(--border-color)",
+        }}
+      >
+        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 800 }}>
           <thead>
             <tr>
-              <th style={{ border: '1px solid var(--border-color)', padding: '0.8rem', textAlign: 'center', backgroundColor: 'var(--table-header-bg)', color: 'var(--table-header-text)' }}>
+              <th
+                style={{
+                  border: "1px solid var(--border-color)",
+                  padding: "0.8rem",
+                  textAlign: "center",
+                  backgroundColor: "var(--table-header-bg)",
+                  color: "var(--table-header-text)",
+                }}
+              >
                 Time/Day
               </th>
-              {days.map(day => (
-                <th key={day} style={{ border: '1px solid var(--border-color)', padding: '0.8rem', textAlign: 'center', backgroundColor: 'var(--table-header-bg)', color: 'var(--table-header-text)' }}>
+              {DAYS.map((day) => (
+                <th
+                  key={day}
+                  style={{
+                    border: "1px solid var(--border-color)",
+                    padding: "0.8rem",
+                    textAlign: "center",
+                    backgroundColor: "var(--table-header-bg)",
+                    color: "var(--table-header-text)",
+                  }}
+                >
                   {day}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody>
-            {timeSlots.map((time, timeIndex) => (
-              <tr key={time}>
-                <td style={{ border: '1px solid var(--border-color)', padding: '0.8rem', textAlign: 'center', fontWeight: 'bold', backgroundColor: 'var(--table-header-bg)', color: 'var(--table-header-text)' }}>
-                  {time}
-                </td>
-                {days.map(day => {
-                  const dayClasses = timetableData[day] || [];
-                  const classForTime = isClassAtTime(dayClasses, timeIndex);
-                  
-                  // Check if this is the starting hour of a class
-                  const startingClass = classForTime && classForTime.start === 
-                    (parseInt(time.split(':')[0]) + (time.includes('PM') && time.split(':')[0] !== '12' ? 12 : 0));
-                  
-                  return (
-                    <td key={`${day}-${time}`} style={{ border: '1px solid var(--border-color)', padding: '0.8rem', textAlign: 'center', backgroundColor: 'var(--surface-muted)', height: '80px', verticalAlign: 'top' }}>
-                      {startingClass && (
-                        <div
-                          style={{ 
-                            backgroundColor: `${classForTime.color}20`,
-                            borderLeft: `4px solid ${classForTime.color}`,
-                            padding: '0.5rem',
-                            borderRadius: '4px',
-                            fontSize: '0.9rem',
-                            color: 'var(--text-primary)'
-                          }}
-                        >
-                          <div style={{ fontWeight: 'bold', color: 'var(--accent-strong)' }}>{classForTime.code}</div>
-                          <div style={{ fontSize: '0.8rem', marginTop: '0.3rem', color: 'var(--text-primary)' }}>Room: {classForTime.room}</div>
-                          <div style={{ fontSize: '0.8rem', marginTop: '0.3rem', color: 'var(--text-primary)' }}>{classForTime.lecturer}</div>
-                          <div style={{ fontSize: '0.8rem', marginTop: '0.3rem', color: 'var(--text-secondary)' }}>{classForTime.time}</div>
-                        </div>
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
+          <tbody>{rows}</tbody>
         </table>
       </div>
     );
   };
 
-  // Function to render the list view
   const renderListView = () => {
-    // Flatten the timetable data for list view
-    const allClasses = [];
-    days.forEach(day => {
-      timetableData[day].forEach(classItem => {
-        allClasses.push({
-          ...classItem,
-          day: day
-        });
-      });
-    });
+    if (filteredSessions.length === 0) {
+      return (
+        <div className="form-container" style={{ textAlign: "center" }}>
+          <p>No sessions match the current filters.</p>
+        </div>
+      );
+    }
 
-    // Sort by day and time
-    const dayOrder = { Monday: 1, Tuesday: 2, Wednesday: 3, Thursday: 4, Friday: 5 };
-    allClasses.sort((a, b) => {
-      if (a.day !== b.day) {
-        return dayOrder[a.day] - dayOrder[b.day];
-      }
-      return a.start - b.start;
+    const dayOrder = Object.fromEntries(DAYS.map((day, idx) => [day, idx]));
+    const sorted = [...filteredSessions].sort((a, b) => {
+      if (a.day === b.day) return SLOTS.indexOf(a.slot) - SLOTS.indexOf(b.slot);
+      return dayOrder[a.day] - dayOrder[b.day];
     });
 
     return (
-      <div style={{
-        backgroundColor: 'var(--surface)',
-        borderRadius: '8px',
-        padding: '1.5rem',
-        marginBottom: '2rem',
-        border: '1px solid var(--border-color)'
-      }}>
-        <h3 style={{ marginBottom: '1rem', color: 'var(--text-primary)' }}>Class Schedule List</h3>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {allClasses.map((classItem, index) => (
+      <div
+        style={{
+          backgroundColor: "var(--surface)",
+          borderRadius: "8px",
+          padding: "1.5rem",
+          marginBottom: "2rem",
+          border: "1px solid var(--border-color)",
+        }}
+      >
+        <h3 style={{ marginBottom: "1rem", color: "var(--text-primary)" }}>Class Schedule List</h3>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          {sorted.map((session) => (
             <div
-              key={index}
+              key={`${session.day}-${session.slot}-${session.course.code}-${session.cohort.id}`}
               style={{
-                padding: '1rem',
-                borderRadius: '8px',
-                backgroundColor: 'var(--surface-muted)',
-                borderLeft: `4px solid ${classItem.color}`,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: '1rem'
+                padding: "1rem",
+                borderRadius: "8px",
+                backgroundColor: "var(--surface-muted)",
+                display: "flex",
+                justifyContent: "space-between",
+                gap: "1rem",
+                flexWrap: "wrap",
               }}
             >
               <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-                  <div style={{ fontWeight: 'bold', color: 'var(--accent-strong)', fontSize: '1.1rem' }}>
-                    {classItem.code}
-                  </div>
-                  <div style={{ 
-                    padding: '0.25rem 0.5rem', 
-                    borderRadius: '4px', 
-                    backgroundColor: 'var(--accent-primary)',
-                    color: '#ffffff',
-                    fontSize: '0.8rem'
-                  }}>
-                    {classItem.day}
-                  </div>
+                <strong style={{ color: "var(--accent-strong)" }}>
+                  {session.course.code} • {session.course.name}
+                </strong>
+                <div style={{ color: "var(--text-secondary)", fontSize: 13 }}>
+                  {session.day} · {session.slot}
                 </div>
-                <div style={{ color: 'var(--text-primary)', marginBottom: '0.25rem' }}>{classItem.title}</div>
-                <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{classItem.time}</div>
+                <div style={{ color: "var(--text-primary)", marginTop: 6 }}>
+                  {session.cohortName}
+                </div>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ color: 'var(--text-primary)', marginBottom: '0.25rem' }}>{classItem.lecturer}</div>
-                <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Room: {classItem.room}</div>
+              <div style={{ textAlign: "right", minWidth: 160 }}>
+                <div style={{ color: "var(--text-primary)" }}>{session.lecturer.name}</div>
+                <div style={{ color: "var(--text-secondary)", fontSize: 13 }}>
+                  Room {session.room.name}
+                </div>
               </div>
             </div>
           ))}
@@ -425,227 +253,161 @@ export default function TimetablesPage() {
 
   return (
     <div>
-      {/* Back to Dashboard Button */}
-      <div style={{ marginBottom: '1rem' }}>
-        <button 
-          onClick={handleNavigateToDashboard}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            backgroundColor: 'var(--accent-primary)',
-            color: 'white',
-            border: 'none',
-            padding: '0.5rem 1rem',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            transition: 'all 0.3s'
-          }}
-          onMouseOver={(e) => e.target.style.backgroundColor = '#3a7a33'}
-          onMouseOut={(e) => e.target.style.backgroundColor = 'var(--accent-primary)'}
+      <div style={{ marginBottom: "1rem" }}>
+        <button
+          onClick={() => navigate("/")}
+          className="btn btn-primary"
+          style={{ display: "flex", alignItems: "center", gap: 8 }}
         >
           ← Back to Dashboard
         </button>
       </div>
 
-      {/* Timetable Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "1rem",
+          marginBottom: "2rem",
+        }}
+      >
         <div>
-          <h1 style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px', color: 'var(--heading-color)' }}>
+          <h1 style={{ display: "flex", alignItems: "center", gap: 12, color: "var(--heading-color)" }}>
             <Calendar size={32} color="#4caf50" />
             Timetable Viewer
           </h1>
-          <p style={{ color: 'var(--text-secondary)' }}>View and manage class schedules</p>
+          <p style={{ color: "var(--text-secondary)" }}>View and manage class schedules</p>
         </div>
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          <button 
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              backgroundColor: '#2d5a27',
-              color: 'white',
-              border: 'none',
-              padding: '0.7rem 1.2rem',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              transition: 'all 0.3s'
-            }}
-            onMouseOver={(e) => e.target.style.backgroundColor = '#3a7a33'}
-            onMouseOut={(e) => e.target.style.backgroundColor = '#2d5a27'}
-            onClick={() => alert('Print functionality would be implemented here')}
-          >
-            <Printer size={16} />
-            Print
-          </button>
-          <button 
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              backgroundColor: '#2d5a27',
-              color: 'white',
-              border: 'none',
-              padding: '0.7rem 1.2rem',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              transition: 'all 0.3s'
-            }}
-            onMouseOver={(e) => e.target.style.backgroundColor = '#3a7a33'}
-            onMouseOut={(e) => e.target.style.backgroundColor = '#2d5a27'}
+        <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+          <button
+            className="btn btn-primary"
             onClick={handleExportToExcel}
+            style={{ display: "flex", alignItems: "center", gap: 8 }}
           >
-            <Download size={16} />
-            Export to Excel
+            <Download size={16} /> Export Excel
           </button>
-          <button 
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              backgroundColor: '#2d5a27',
-              color: 'white',
-              border: 'none',
-              padding: '0.7rem 1.2rem',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              transition: 'all 0.3s'
-            }}
-            onMouseOver={(e) => e.target.style.backgroundColor = '#3a7a33'}
-            onMouseOut={(e) => e.target.style.backgroundColor = '#2d5a27'}
+          <button
+            className="btn btn-primary"
             onClick={handleExportToPDF}
+            style={{ display: "flex", alignItems: "center", gap: 8 }}
           >
-            <FileText size={16} />
-            Export to PDF
-          </button>
-        </div>
-      </div>
-
-      {/* Filters and View Controls */}
-      <div style={{
-        backgroundColor: 'var(--surface)',
-        borderRadius: '8px',
-        padding: '1.5rem',
-        marginBottom: '2rem',
-        border: '1px solid var(--border-color)',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        flexWrap: 'wrap',
-        gap: '1rem'
-      }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Filter size={16} color="var(--text-secondary)" />
-            <span style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>Filters:</span>
-          </div>
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            <select 
-              value={selectedProgram}
-              onChange={(e) => setSelectedProgram(e.target.value)}
-              style={{
-                padding: '0.8rem',
-                border: '1px solid var(--border-color)',
-                borderRadius: '4px',
-                backgroundColor: 'var(--input-bg)',
-                color: 'var(--text-primary)',
-                fontSize: '14px',
-                outline: 'none'
-              }}
-            >
-              <option>All Programs</option>
-              <option>Computer Science</option>
-              <option>Business Administration</option>
-            </select>
-            <select 
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              style={{
-                padding: '0.8rem',
-                border: '1px solid var(--border-color)',
-                borderRadius: '4px',
-                backgroundColor: 'var(--input-bg)',
-                color: 'var(--text-primary)',
-                fontSize: '14px',
-                outline: 'none'
-              }}
-            >
-              <option>All Years</option>
-              <option>Year 1</option>
-              <option>Year 2</option>
-            </select>
-          </div>
-        </div>
-        
-        <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#2d5a27', borderRadius: '8px', padding: '4px' }}>
-          <button
-            onClick={() => setViewMode('grid')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.5rem 1rem',
-              background: viewMode === 'grid' ? '#4caf50' : 'transparent',
-              border: 'none',
-              color: viewMode === 'grid' ? 'white' : '#a0a0a0',
-              cursor: 'pointer',
-              borderRadius: '6px',
-              fontSize: '0.9rem',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            <Grid size={14} />
-            Grid
+            <FileText size={16} /> Export PDF
           </button>
           <button
-            onClick={() => setViewMode('list')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.5rem 1rem',
-              background: viewMode === 'list' ? '#4caf50' : 'transparent',
-              border: 'none',
-              color: viewMode === 'list' ? 'white' : '#a0a0a0',
-              cursor: 'pointer',
-              borderRadius: '6px',
-              fontSize: '0.9rem',
-              transition: 'all 0.2s ease'
-            }}
+            className="btn btn-secondary"
+            onClick={regenerate}
+            style={{ display: "flex", alignItems: "center", gap: 8 }}
           >
-            <List size={14} />
-            List
+            <RotateCw size={16} /> Regenerate
           </button>
         </div>
       </div>
 
-      {/* Render the appropriate view based on viewMode state */}
-      {viewMode === 'grid' ? renderGridView() : renderListView()}
+      <div
+        style={{
+          backgroundColor: "var(--surface)",
+          borderRadius: "8px",
+          padding: "1.5rem",
+          marginBottom: "2rem",
+          border: "1px solid var(--border-color)",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Filter size={16} />
+            <span style={{ color: "var(--text-primary)", fontWeight: 500 }}>Filters</span>
+          </div>
+          <select
+            value={selectedProgram}
+            onChange={(e) => setSelectedProgram(e.target.value)}
+            className="input"
+            style={{ maxWidth: 220 }}
+          >
+            {programOptions.map((option) => (
+              <option key={option}>{option}</option>
+            ))}
+          </select>
+          <select
+            value={selectedCohort}
+            onChange={(e) => setSelectedCohort(e.target.value)}
+            className="input"
+            style={{ maxWidth: 220 }}
+          >
+            {cohortOptions.map((option) => (
+              <option key={option}>{option}</option>
+            ))}
+          </select>
+        </div>
 
-      {/* Timetable Legend */}
-      <div style={{
-        backgroundColor: 'var(--surface)',
-        borderRadius: '8px',
-        padding: '1.5rem',
-        marginBottom: '2rem',
-        border: '1px solid var(--border-color)'
-      }}>
-        <h3 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>Legend</h3>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-primary)' }}>
-            <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#3a7a33' }}></div>
-            <span>Computer Science</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-primary)' }}>
-            <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#4caf50' }}></div>
-            <span>Data Structures</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-primary)' }}>
-            <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#2d5a27' }}></div>
-            <span>Database Systems</span>
-          </div>
+        <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+          <button
+            onClick={() => setViewMode("grid")}
+            className="view-toggle"
+            style={{
+              backgroundColor: viewMode === "grid" ? "var(--accent-primary)" : "transparent",
+              color: viewMode === "grid" ? "#fff" : "var(--text-secondary)",
+            }}
+          >
+            <Grid size={14} /> Grid
+          </button>
+          <button
+            onClick={() => setViewMode("list")}
+            className="view-toggle"
+            style={{
+              backgroundColor: viewMode === "list" ? "var(--accent-primary)" : "transparent",
+              color: viewMode === "list" ? "#fff" : "var(--text-secondary)",
+            }}
+          >
+            <List size={14} /> List
+          </button>
         </div>
       </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
+          gap: 16,
+          marginBottom: 24,
+        }}
+      >
+        <div className="stat-card">
+          <div style={{ fontSize: 24, fontWeight: 700, color: "var(--accent-strong)" }}>{stats.scheduled}</div>
+          <div style={{ color: "var(--text-secondary)" }}>Scheduled sessions</div>
+        </div>
+        <div className="stat-card">
+          <div style={{ fontSize: 24, fontWeight: 700, color: "var(--accent-strong)" }}>{stats.totalSlots}</div>
+          <div style={{ color: "var(--text-secondary)" }}>Slots scanned</div>
+        </div>
+        <div className="stat-card">
+          <div style={{ fontSize: 24, fontWeight: 700, color: "var(--accent-strong)" }}>{stats.unplaced}</div>
+          <div style={{ color: "var(--text-secondary)" }}>Unplaced sessions</div>
+        </div>
+      </div>
+
+      {viewMode === "grid" ? renderGridView() : renderListView()}
+
+      {timetable?.__unplaced?.length ? (
+        <div className="form-container">
+          <h3>Unplaced Sessions</h3>
+          <p style={{ color: "var(--text-secondary)" }}>
+            These sessions could not be scheduled due to lecturer, room, or capacity conflicts.
+          </p>
+          <ul>
+            {timetable.__unplaced.map((item, idx) => (
+              <li
+                key={`${item.course.code}-${item.cohort?.id ?? idx}-${idx}`}
+                style={{ color: "var(--text-secondary)" }}
+              >
+                {item.course.code} {item.course.name} for {item.cohort.name}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
     </div>
   );
 }
+

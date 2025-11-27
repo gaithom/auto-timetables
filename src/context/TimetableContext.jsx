@@ -1,55 +1,180 @@
-import React, { createContext, useContext, useMemo, useState, useCallback } from "react";
+/* global globalThis */
+import React, { createContext, useContext, useMemo, useState, useCallback, useEffect } from "react";
+import PropTypes from "prop-types";
 import { v4 as uuid } from "uuid";
 import { DAYS, SLOTS, generateTimetable } from "../utils/timetableGenerator";
 import sample from "../data/sampleData";
 
 const TimetableContext = createContext();
 
+const isBrowser = typeof globalThis !== "undefined" && !!globalThis.window;
+const STORAGE_KEYS = {
+  programs: "tt-programs",
+  lecturers: "tt-lecturers",
+  cohorts: "tt-cohorts",
+  rooms: "tt-rooms",
+};
+
+const clone = (value) => {
+  if (typeof globalThis.structuredClone === "function") {
+    return globalThis.structuredClone(value);
+  }
+  if (Array.isArray(value)) {
+    return value.map(clone);
+  }
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, val]) => [key, clone(val)]));
+  }
+  return value;
+};
+
+function usePersistentList(key, fallback) {
+  const [state, setState] = useState(() => {
+    if (!isBrowser) return clone(fallback);
+    try {
+      const stored = globalThis.localStorage?.getItem(key);
+      return stored ? JSON.parse(stored) : clone(fallback);
+    } catch (err) {
+      console.warn(`Failed to parse ${key} from localStorage`, err);
+      return clone(fallback);
+    }
+  });
+
+  useEffect(() => {
+    if (!isBrowser) return;
+    try {
+      globalThis.localStorage?.setItem(key, JSON.stringify(state));
+    } catch (err) {
+      console.warn(`Failed to persist ${key} to localStorage`, err);
+    }
+  }, [key, state]);
+
+  return [state, setState];
+}
+
 export function TimetableProvider({ children }) {
-  const [programs, setPrograms] = useState(sample.programs);
-  const [lecturers, setLecturers] = useState(sample.lecturers);
-  const [cohorts, setCohorts] = useState(sample.cohorts);
-  const [rooms, setRooms] = useState(sample.rooms);
-  const [timetables, setTimetables] = useState(sample.timetables || {});
+  const [programs, setPrograms] = usePersistentList(STORAGE_KEYS.programs, sample.programs);
+  const [lecturers, setLecturers] = usePersistentList(STORAGE_KEYS.lecturers, sample.lecturers);
+  const [cohorts, setCohorts] = usePersistentList(STORAGE_KEYS.cohorts, sample.cohorts);
+  const [rooms, setRooms] = usePersistentList(STORAGE_KEYS.rooms, sample.rooms);
 
-  const addProgram = (payload) => setPrograms((p) => [...p, { id: uuid(), ...payload }]);
-  const addLecturer = (payload) => setLecturers((p) => [...p, { id: uuid(), ...payload }]);
-  const addCohort = (payload) => setCohorts((p) => [...p, { id: uuid(), ...payload }]);
-  const addRoom = (payload) => setRooms((p) => [...p, { id: uuid(), ...payload }]);
-  const addTimetable = (payload) => setTimetables((p) => [...p, { id: uuid(), ...payload }]);
+  const [manualSeed, setManualSeed] = useState(0);
 
-  const removeById = (setter) => (id) => setter((arr) => arr.filter((x) => x.id !== id));
+  const timetable = useMemo(
+    () => generateTimetable({ programs, lecturers, cohorts, rooms, manualSeed }),
+    [programs, lecturers, cohorts, rooms, manualSeed]
+  );
+
+  const addProgram = useCallback(
+    (payload) => setPrograms((prev) => [...prev, { courses: [], ...payload, id: uuid() }]),
+    [setPrograms]
+  );
+  const updateProgram = useCallback(
+    (id, updates) =>
+      setPrograms((prev) => prev.map((program) => (program.id === id ? { ...program, ...updates } : program))),
+    [setPrograms]
+  );
+  const removeProgram = useCallback(
+    (id) => setPrograms((prev) => prev.filter((program) => program.id !== id)),
+    [setPrograms]
+  );
+
+  const addLecturer = useCallback(
+    (payload) => setLecturers((prev) => [...prev, { ...payload, id: uuid() }]),
+    [setLecturers]
+  );
+  const updateLecturer = useCallback(
+    (id, updates) =>
+      setLecturers((prev) => prev.map((lecturer) => (lecturer.id === id ? { ...lecturer, ...updates } : lecturer))),
+    [setLecturers]
+  );
+  const removeLecturer = useCallback(
+    (id) => setLecturers((prev) => prev.filter((lecturer) => lecturer.id !== id)),
+    [setLecturers]
+  );
+
+  const addCohort = useCallback(
+    (payload) => setCohorts((prev) => [...prev, { ...payload, id: uuid() }]),
+    [setCohorts]
+  );
+  const updateCohort = useCallback(
+    (id, updates) =>
+      setCohorts((prev) => prev.map((cohort) => (cohort.id === id ? { ...cohort, ...updates } : cohort))),
+    [setCohorts]
+  );
+  const removeCohort = useCallback(
+    (id) => setCohorts((prev) => prev.filter((cohort) => cohort.id !== id)),
+    [setCohorts]
+  );
+
+  const addRoom = useCallback(
+    (payload) => setRooms((prev) => [...prev, { ...payload, id: uuid() }]),
+    [setRooms]
+  );
+  const updateRoom = useCallback(
+    (id, updates) =>
+      setRooms((prev) => prev.map((room) => (room.id === id ? { ...room, ...updates } : room))),
+    [setRooms]
+  );
+  const removeRoom = useCallback(
+    (id) => setRooms((prev) => prev.filter((room) => room.id !== id)),
+    [setRooms]
+  );
 
   const regenerate = useCallback(() => {
-    const next = generateTimetable({ programs, lecturers, cohorts, rooms });
-    setTimetables(next);
-  }, [programs, lecturers, cohorts, rooms]);
+    setManualSeed((seed) => seed + 1);
+  }, []);
 
   const value = useMemo(
     () => ({
       programs,
       lecturers,
-      cohorts,  
+      cohorts,
       rooms,
-      timetables,
+      timetable,
       DAYS,
       SLOTS,
       addProgram,
       addLecturer,
       addCohort,
       addRoom,
-      addTimetable,
-      removeProgram: removeById(setPrograms),
-      removeLecturer: removeById(setLecturers),
-      removeCohort: removeById(setCohorts),
-      removeRoom: removeById(setRooms),
-      removeTimetable: removeById(setTimetables),
+      updateProgram,
+      updateLecturer,
+      updateCohort,
+      updateRoom,
+      removeProgram,
+      removeLecturer,
+      removeCohort,
+      removeRoom,
       regenerate,
     }),
-    [programs, lecturers, cohorts, rooms, timetables  , regenerate]
+    [
+      programs,
+      lecturers,
+      cohorts,
+      rooms,
+      timetable,
+      regenerate,
+      addProgram,
+      addLecturer,
+      addCohort,
+      addRoom,
+      updateProgram,
+      updateLecturer,
+      updateCohort,
+      updateRoom,
+      removeProgram,
+      removeLecturer,
+      removeCohort,
+      removeRoom,
+    ]
   );
 
   return <TimetableContext.Provider value={value}>{children}</TimetableContext.Provider>;
 }
 
 export const useTimetable = () => useContext(TimetableContext);
+
+TimetableProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

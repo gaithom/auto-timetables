@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import { TimetableProvider } from "./context/TimetableContext";
-import { ProgramProvider } from "./context/ProgramContext";
 import {
   LayoutDashboard,
   BookOpen,
@@ -73,7 +72,6 @@ export default function App() {
 
   return (
     <TimetableProvider>
-      <ProgramProvider>
         <Router>
           <div
             style={{
@@ -175,7 +173,6 @@ export default function App() {
             </main>
           </div>
         </Router>
-      </ProgramProvider>
     </TimetableProvider>
   );
 }
