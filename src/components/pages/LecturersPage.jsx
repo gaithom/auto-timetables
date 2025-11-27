@@ -126,26 +126,21 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
             display: 'block',
             fontSize: '14px',
             fontWeight: '500',
-            color: '#e0e0e0',
+            color: 'var(--text-primary)',
             marginBottom: '16px'
           }}>
             Availability Schedule
           </label>
-          <div style={{
-            backgroundColor: '#1a1a1a',
-            borderRadius: '8px',
-            padding: '16px',
-            border: '1px solid #333'
-          }}>
+          <div className="availability-table-container">
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <table className="availability-table">
                 <thead>
                   <tr>
                     <th style={{
                       textAlign: 'left',
                       fontSize: '14px',
                       fontWeight: '500',
-                      color: '#a0a0a0',
+                      color: 'var(--text-secondary)',
                       padding: '8px 12px'
                     }}>Time</th>
                     {dayLabels.map(day => (
@@ -153,7 +148,7 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
                         textAlign: 'center',
                         fontSize: '14px',
                         fontWeight: '500',
-                        color: '#a0a0a0',
+                        color: 'var(--text-secondary)',
                         padding: '8px 12px'
                       }}>
                         {day}
@@ -163,10 +158,10 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
                 </thead>
                 <tbody>
                   {timeSlots.map(timeSlot => (
-                    <tr key={timeSlot} style={{ borderTop: '1px solid #333' }}>
+                    <tr key={timeSlot} style={{ borderTop: '1px solid var(--border-color)' }}>
                       <td style={{
                         fontSize: '14px',
-                        color: '#e0e0e0',
+                        color: 'var(--text-primary)',
                         padding: '8px 12px',
                         fontWeight: '500'
                       }}>
@@ -181,7 +176,7 @@ function LecturerForm({ onSave, editingLecturer = null, onCancel = null }) {
                             style={{
                               width: '16px',
                               height: '16px',
-                              accentColor: '#4caf50'
+                              accentColor: 'var(--accent-strong)'
                             }}
                           />
                         </td>

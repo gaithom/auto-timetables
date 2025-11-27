@@ -283,20 +283,21 @@ export default function TimetablesPage() {
   const renderGridView = () => {
     return (
       <div style={{
-        backgroundColor: '#1e1e1e',
+        backgroundColor: 'var(--surface)',
         borderRadius: '8px',
         padding: '1.5rem',
         marginBottom: '2rem',
-        overflowX: 'auto'
+        overflowX: 'auto',
+        border: '1px solid var(--border-color)'
       }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '800px' }}>
           <thead>
             <tr>
-              <th style={{ border: '1px solid #333', padding: '0.8rem', textAlign: 'center', backgroundColor: '#2d5a27', color: 'white' }}>
+              <th style={{ border: '1px solid var(--border-color)', padding: '0.8rem', textAlign: 'center', backgroundColor: 'var(--table-header-bg)', color: 'var(--table-header-text)' }}>
                 Time/Day
               </th>
               {days.map(day => (
-                <th key={day} style={{ border: '1px solid #333', padding: '0.8rem', textAlign: 'center', backgroundColor: '#2d5a27', color: 'white' }}>
+                <th key={day} style={{ border: '1px solid var(--border-color)', padding: '0.8rem', textAlign: 'center', backgroundColor: 'var(--table-header-bg)', color: 'var(--table-header-text)' }}>
                   {day}
                 </th>
               ))}
@@ -305,7 +306,7 @@ export default function TimetablesPage() {
           <tbody>
             {timeSlots.map((time, timeIndex) => (
               <tr key={time}>
-                <td style={{ border: '1px solid #333', padding: '0.8rem', textAlign: 'center', fontWeight: 'bold', backgroundColor: '#2d5a27', color: 'white' }}>
+                <td style={{ border: '1px solid var(--border-color)', padding: '0.8rem', textAlign: 'center', fontWeight: 'bold', backgroundColor: 'var(--table-header-bg)', color: 'var(--table-header-text)' }}>
                   {time}
                 </td>
                 {days.map(day => {
@@ -317,7 +318,7 @@ export default function TimetablesPage() {
                     (parseInt(time.split(':')[0]) + (time.includes('PM') && time.split(':')[0] !== '12' ? 12 : 0));
                   
                   return (
-                    <td key={`${day}-${time}`} style={{ border: '1px solid #333', padding: '0.8rem', textAlign: 'center', backgroundColor: 'rgba(45, 90, 39, 0.1)', height: '80px', verticalAlign: 'top' }}>
+                    <td key={`${day}-${time}`} style={{ border: '1px solid var(--border-color)', padding: '0.8rem', textAlign: 'center', backgroundColor: 'var(--surface-muted)', height: '80px', verticalAlign: 'top' }}>
                       {startingClass && (
                         <div
                           style={{ 
@@ -325,13 +326,14 @@ export default function TimetablesPage() {
                             borderLeft: `4px solid ${classForTime.color}`,
                             padding: '0.5rem',
                             borderRadius: '4px',
-                            fontSize: '0.9rem'
+                            fontSize: '0.9rem',
+                            color: 'var(--text-primary)'
                           }}
                         >
-                          <div style={{ fontWeight: 'bold', color: '#4caf50' }}>{classForTime.code}</div>
-                          <div style={{ fontSize: '0.8rem', marginTop: '0.3rem', color: '#e0e0e0' }}>Room: {classForTime.room}</div>
-                          <div style={{ fontSize: '0.8rem', marginTop: '0.3rem', color: '#e0e0e0' }}>{classForTime.lecturer}</div>
-                          <div style={{ fontSize: '0.8rem', marginTop: '0.3rem', color: '#e0e0e0' }}>{classForTime.time}</div>
+                          <div style={{ fontWeight: 'bold', color: 'var(--accent-strong)' }}>{classForTime.code}</div>
+                          <div style={{ fontSize: '0.8rem', marginTop: '0.3rem', color: 'var(--text-primary)' }}>Room: {classForTime.room}</div>
+                          <div style={{ fontSize: '0.8rem', marginTop: '0.3rem', color: 'var(--text-primary)' }}>{classForTime.lecturer}</div>
+                          <div style={{ fontSize: '0.8rem', marginTop: '0.3rem', color: 'var(--text-secondary)' }}>{classForTime.time}</div>
                         </div>
                       )}
                     </td>
@@ -369,12 +371,13 @@ export default function TimetablesPage() {
 
     return (
       <div style={{
-        backgroundColor: '#1e1e1e',
+        backgroundColor: 'var(--surface)',
         borderRadius: '8px',
         padding: '1.5rem',
-        marginBottom: '2rem'
+        marginBottom: '2rem',
+        border: '1px solid var(--border-color)'
       }}>
-        <h3 style={{ marginBottom: '1rem', color: '#e0e0e0' }}>Class Schedule List</h3>
+        <h3 style={{ marginBottom: '1rem', color: 'var(--text-primary)' }}>Class Schedule List</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {allClasses.map((classItem, index) => (
             <div
@@ -382,7 +385,7 @@ export default function TimetablesPage() {
               style={{
                 padding: '1rem',
                 borderRadius: '8px',
-                backgroundColor: 'rgba(45, 90, 39, 0.1)',
+                backgroundColor: 'var(--surface-muted)',
                 borderLeft: `4px solid ${classItem.color}`,
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -393,25 +396,25 @@ export default function TimetablesPage() {
             >
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-                  <div style={{ fontWeight: 'bold', color: '#4caf50', fontSize: '1.1rem' }}>
+                  <div style={{ fontWeight: 'bold', color: 'var(--accent-strong)', fontSize: '1.1rem' }}>
                     {classItem.code}
                   </div>
                   <div style={{ 
                     padding: '0.25rem 0.5rem', 
                     borderRadius: '4px', 
-                    backgroundColor: '#2d5a27',
-                    color: 'white',
+                    backgroundColor: 'var(--accent-primary)',
+                    color: '#ffffff',
                     fontSize: '0.8rem'
                   }}>
                     {classItem.day}
                   </div>
                 </div>
-                <div style={{ color: '#e0e0e0', marginBottom: '0.25rem' }}>{classItem.title}</div>
-                <div style={{ color: '#a0a0a0', fontSize: '0.9rem' }}>{classItem.time}</div>
+                <div style={{ color: 'var(--text-primary)', marginBottom: '0.25rem' }}>{classItem.title}</div>
+                <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{classItem.time}</div>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ color: '#e0e0e0', marginBottom: '0.25rem' }}>{classItem.lecturer}</div>
-                <div style={{ color: '#a0a0a0', fontSize: '0.9rem' }}>Room: {classItem.room}</div>
+                <div style={{ color: 'var(--text-primary)', marginBottom: '0.25rem' }}>{classItem.lecturer}</div>
+                <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Room: {classItem.room}</div>
               </div>
             </div>
           ))}
@@ -430,7 +433,7 @@ export default function TimetablesPage() {
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
-            backgroundColor: '#2d5a27',
+            backgroundColor: 'var(--accent-primary)',
             color: 'white',
             border: 'none',
             padding: '0.5rem 1rem',
@@ -439,7 +442,7 @@ export default function TimetablesPage() {
             transition: 'all 0.3s'
           }}
           onMouseOver={(e) => e.target.style.backgroundColor = '#3a7a33'}
-          onMouseOut={(e) => e.target.style.backgroundColor = '#2d5a27'}
+          onMouseOut={(e) => e.target.style.backgroundColor = 'var(--accent-primary)'}
         >
           ← Back to Dashboard
         </button>
@@ -448,11 +451,11 @@ export default function TimetablesPage() {
       {/* Timetable Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px', color: '#e0e0e0' }}>
+          <h1 style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px', color: 'var(--heading-color)' }}>
             <Calendar size={32} color="#4caf50" />
             Timetable Viewer
           </h1>
-          <p style={{ color: '#a0a0a0' }}>View and manage class schedules</p>
+          <p style={{ color: 'var(--text-secondary)' }}>View and manage class schedules</p>
         </div>
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           <button 
@@ -520,11 +523,11 @@ export default function TimetablesPage() {
 
       {/* Filters and View Controls */}
       <div style={{
-        backgroundColor: '#1e1e1e',
+        backgroundColor: 'var(--surface)',
         borderRadius: '8px',
         padding: '1.5rem',
         marginBottom: '2rem',
-        border: '1px solid #333',
+        border: '1px solid var(--border-color)',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
@@ -533,8 +536,8 @@ export default function TimetablesPage() {
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Filter size={16} color="#a0a0a0" />
-            <span style={{ fontSize: '14px', fontWeight: '500', color: '#e0e0e0' }}>Filters:</span>
+            <Filter size={16} color="var(--text-secondary)" />
+            <span style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>Filters:</span>
           </div>
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
             <select 
@@ -542,10 +545,10 @@ export default function TimetablesPage() {
               onChange={(e) => setSelectedProgram(e.target.value)}
               style={{
                 padding: '0.8rem',
-                border: '1px solid #333',
+                border: '1px solid var(--border-color)',
                 borderRadius: '4px',
-                backgroundColor: '#121212',
-                color: '#e0e0e0',
+                backgroundColor: 'var(--input-bg)',
+                color: 'var(--text-primary)',
                 fontSize: '14px',
                 outline: 'none'
               }}
@@ -559,10 +562,10 @@ export default function TimetablesPage() {
               onChange={(e) => setSelectedYear(e.target.value)}
               style={{
                 padding: '0.8rem',
-                border: '1px solid #333',
+                border: '1px solid var(--border-color)',
                 borderRadius: '4px',
-                backgroundColor: '#121212',
-                color: '#e0e0e0',
+                backgroundColor: 'var(--input-bg)',
+                color: 'var(--text-primary)',
                 fontSize: '14px',
                 outline: 'none'
               }}
@@ -621,23 +624,23 @@ export default function TimetablesPage() {
 
       {/* Timetable Legend */}
       <div style={{
-        backgroundColor: '#1e1e1e',
+        backgroundColor: 'var(--surface)',
         borderRadius: '8px',
         padding: '1.5rem',
         marginBottom: '2rem',
-        border: '1px solid #333'
+        border: '1px solid var(--border-color)'
       }}>
-        <h3 style={{ marginBottom: '16px', color: '#e0e0e0' }}>Legend</h3>
+        <h3 style={{ marginBottom: '16px', color: 'var(--text-primary)' }}>Legend</h3>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: '#e0e0e0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-primary)' }}>
             <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#3a7a33' }}></div>
             <span>Computer Science</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: '#e0e0e0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-primary)' }}>
             <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#4caf50' }}></div>
             <span>Data Structures</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: '#e0e0a0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem', color: 'var(--text-primary)' }}>
             <div style={{ width: '16px', height: '16px', borderRadius: '4px', backgroundColor: '#2d5a27' }}></div>
             <span>Database Systems</span>
           </div>
