@@ -1,3 +1,8 @@
+/**
+ * Main application component that sets up the routing and theme for the Timetable Forge application.
+ * It includes a sidebar navigation and theme toggling functionality.
+ */
+
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import { TimetableProvider } from "./context/TimetableContext";
@@ -12,6 +17,7 @@ import {
   Moon,
 } from "lucide-react";
 
+// Import page components
 import DashboardPage from "./components/pages/DashboardPage";
 import ProgramsPage from "./components/pages/ProgramsPage";
 import LecturersPage from "./components/pages/LecturersPage";
@@ -20,8 +26,13 @@ import RoomsPage from "./components/pages/RoomsPage";
 import TimetablesPage from "./components/pages/TimetablesPage";
 
 export default function App() {
-  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "dark");
+  // State for managing the current theme (dark/light mode)
+  const [theme, setTheme] = useState(() => {
+    // Initialize theme from localStorage or default to 'dark'
+    return localStorage.getItem("theme") || "dark";
+  });
 
+  // Theme configuration with color tokens for both light and dark modes
   const themeTokens = {
     dark: {
       appBg: "#1e1e1e",
@@ -51,16 +62,19 @@ export default function App() {
     },
   }[theme];
 
+  // Update the document body class and save theme preference when theme changes
   useEffect(() => {
     document.body.classList.remove("theme-dark", "theme-light");
     document.body.classList.add(`theme-${theme}`);
     localStorage.setItem("theme", theme);
   }, [theme]);
 
+  // Toggle between dark and light theme
   const handleToggleTheme = () => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
 
+  // Navigation items for the sidebar
   const navItems = [
     { path: "/", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
     { path: "/programs", label: "Programs", icon: <BookOpen size={18} /> },
@@ -71,8 +85,10 @@ export default function App() {
   ];
 
   return (
+    // Wrap the app with TimetableProvider to provide timetable data to all components
     <TimetableProvider>
-        <Router>
+      {/* Set up client-side routing */}
+      <Router>
           <div
             style={{
               display: "flex",

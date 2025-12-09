@@ -1,3 +1,11 @@
+/**
+ * Timetable Context Module
+ * 
+ * This module provides a React context for managing the application's timetable data,
+ * including programs, lecturers, cohorts, and rooms. It handles data persistence
+ * using localStorage and provides methods for CRUD operations on the data.
+ */
+
 /* global globalThis */
 import React, { createContext, useContext, useMemo, useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
@@ -5,9 +13,13 @@ import { v4 as uuid } from "uuid";
 import { DAYS, SLOTS, generateTimetable } from "../utils/timetableGenerator";
 import sample from "../data/sampleData";
 
+// Create a new context for the timetable data
 const TimetableContext = createContext();
 
+// Check if the code is running in a browser environment
 const isBrowser = typeof globalThis !== "undefined" && !!globalThis.window;
+
+// Keys used for storing data in localStorage
 const STORAGE_KEYS = {
   programs: "tt-programs",
   lecturers: "tt-lecturers",
@@ -15,23 +27,41 @@ const STORAGE_KEYS = {
   rooms: "tt-rooms",
 };
 
+/**
+ * Deep clones a value, handling objects, arrays, and primitives.
+ * Uses structuredClone if available, otherwise falls back to a manual implementation.
+ * @param {*} value - The value to clone
+ * @returns {*} A deep clone of the value
+ */
 const clone = (value) => {
+  // Use the browser's native structuredClone if available (faster and handles more cases)
   if (typeof globalThis.structuredClone === "function") {
     return globalThis.structuredClone(value);
   }
+  // Handle arrays
   if (Array.isArray(value)) {
     return value.map(clone);
   }
+  // Handle plain objects
   if (value && typeof value === "object") {
     return Object.fromEntries(Object.entries(value).map(([key, val]) => [key, clone(val)]));
   }
+  // Return primitives directly
   return value;
 };
 
+/**
+ * Custom hook for managing a list with localStorage persistence
+ * @param {string} key - The localStorage key to use for persistence
+ * @param {Array} fallback - Default value to use if no data is found in localStorage
+ * @returns {Array} [state, setState] - The state and setter function
+ */
 function usePersistentList(key, fallback) {
+  // Initialize state with data from localStorage or fallback
   const [state, setState] = useState(() => {
     if (!isBrowser) return clone(fallback);
     try {
+      // Try to load data from localStorage
       const stored = globalThis.localStorage?.getItem(key);
       return stored ? JSON.parse(stored) : clone(fallback);
     } catch (err) {
@@ -40,6 +70,7 @@ function usePersistentList(key, fallback) {
     }
   });
 
+  // Persist state to localStorage whenever it changes
   useEffect(() => {
     if (!isBrowser) return;
     try {
@@ -52,7 +83,17 @@ function usePersistentList(key, fallback) {
   return [state, setState];
 }
 
+/**
+ * Timetable Provider Component
+ * 
+ * This component wraps the application and provides the timetable data and methods
+ * to its children through the TimetableContext.
+ * 
+ * @param {Object} props - Component props
+ * @param {ReactNode} props.children - Child components
+ */
 export function TimetableProvider({ children }) {
+  // Initialize state for programs, lecturers, cohorts, and rooms
   const [programs, setPrograms] = usePersistentList(STORAGE_KEYS.programs, sample.programs);
   const [lecturers, setLecturers] = usePersistentList(STORAGE_KEYS.lecturers, sample.lecturers);
   const [cohorts, setCohorts] = usePersistentList(STORAGE_KEYS.cohorts, sample.cohorts);

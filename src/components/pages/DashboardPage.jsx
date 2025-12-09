@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
   BookOpen, 
@@ -10,13 +10,57 @@ import {
   UserPlus,
   Settings
 } from "lucide-react";
+import { useTimetable } from "../../context/TimetableContext";
 
 export default function EnhancedDashboard() {
   const navigate = useNavigate();
+  // Access timetable data from context
+  const { programs, lecturers, rooms, timetable } = useTimetable();
+  
+  /**
+   * Calculate and memoize dashboard statistics
+   * This avoids recalculating on every render unless dependencies change
+   */
+  const stats = useMemo(() => {
+    // Count total courses by summing courses across all programs
+    const totalCourses = programs.reduce(
+      (sum, program) => sum + (program.courses?.length || 0), 
+      0
+    );
+    
+    // Count total scheduled sessions from the timetable
+    let scheduledSessions = 0;
+    if (timetable) {
+      // Iterate through each day in the timetable
+      Object.values(timetable).forEach(day => {
+        if (day && typeof day === 'object' && !Array.isArray(day)) {
+          // Iterate through each time slot in the day
+          Object.values(day).forEach(slot => {
+            if (Array.isArray(slot)) {
+              // Add the number of sessions in this time slot
+              scheduledSessions += slot.length;
+            }
+          });
+        }
+      });
+    }
+    
+    // Return the computed statistics
+    return {
+      totalPrograms: programs.length,      // Total number of academic programs
+      totalCourses,                       // Total courses across all programs
+      totalLecturers: lecturers.length,    // Total number of lecturers
+      totalRooms: rooms.length,            // Total number of rooms
+      scheduledSessions,                   // Total number of scheduled sessions
+      // Calculate completion percentage (capped at 100%)
+      // Using 100 as a baseline for 100% completion
+      completionPercentage: Math.min(Math.round((scheduledSessions / 100) * 100), 100)
+    };
+  }, [programs, lecturers, rooms, timetable]);
 
   return (
     <div className="page active">
-      {/* Header */}
+      {/* Page Header */}
       <div style={{ marginBottom: '32px' }}>
         <h1>Dashboard</h1>
         <p>Welcome to Timetable Forge - Manage your academic scheduling</p>
@@ -41,7 +85,7 @@ export default function EnhancedDashboard() {
                 <BookOpen size={20} color="#4caf50" />
               </div>
               <h3>Total Programs</h3>
-              <div className="stat-number">12</div>
+              <div className="stat-number">{stats.totalPrograms}</div>
               <div className="stat-description">Active academic programs</div>
             </div>
             <div className="stat-icon">
@@ -58,45 +102,11 @@ export default function EnhancedDashboard() {
                 <Calendar size={20} color="#4caf50" />
               </div>
               <h3>Active Courses</h3>
-              <div className="stat-number">148</div>
-              <div className="stat-description">Currently scheduled courses</div>
+              <div className="stat-number">{stats.totalCourses}</div>
+              <div className="stat-description">Total courses across all programs</div>
             </div>
             <div className="stat-icon">
               <Calendar size={28} color="#4caf50" />
-            </div>
-          </div>
-        </div>
-
-        {/* Teaching Staff Card */}
-        <div className="stat-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <Users size={20} color="#4caf50" />
-              </div>
-              <h3>Teaching Staff</h3>
-              <div className="stat-number">32</div>
-              <div className="stat-description">Available lecturers</div>
-            </div>
-            <div className="stat-icon">
-              <Users size={28} color="#4caf50" />
-            </div>
-          </div>
-        </div>
-
-        {/* Lecture Rooms Card */}
-        <div className="stat-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <DoorOpen size={20} color="#4caf50" />
-              </div>
-              <h3>Lecture Rooms</h3>
-              <div className="stat-number">18</div>
-              <div className="stat-description">Available facilities</div>
-            </div>
-            <div className="stat-icon">
-              <DoorOpen size={28} color="#4caf50" />
             </div>
           </div>
         </div>
@@ -149,34 +159,43 @@ export default function EnhancedDashboard() {
           
           <div className="activities-list">
             
-             </div>
+          </div>
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div>
+      {/* Quick Actions Section */}
+      <div className="quick-actions">
         <h2>Quick Actions</h2>
-        <p>Common tasks and shortcuts</p>
-        
-        <div className="quick-actions-grid">
-          {/* Add Program */}
-          <button className="quick-action-btn">
-            <div className="quick-action-icon">
-              <Plus size={24} color="#4caf50" />
-            </div>
-            <h3>Add Program</h3>
+        <div className="action-buttons">
+          {/* Add New Program Button */}
+          <button 
+            className="btn primary" 
+            onClick={() => navigate('/programs/add')}
+            aria-label="Add a new academic program"
+          >
+            Add New Program
           </button>
-
-          {/* Manage Lecturers */}
-          <button className="quick-action-btn">
-            <div className="quick-action-icon">
-              <UserPlus size={24} color="#4caf50" />
-            </div>
-            <h3>Manage Lecturers</h3>
+          
+          {/* Add Lecturer Button */}
+          <button 
+            className="btn secondary"
+            onClick={() => navigate('/lecturers/add')}
+            aria-label="Add a new lecturer"
+          >
+            Add Lecturer
           </button>
-
-          {/* Configure Rooms */}
-          <button className="quick-action-btn">
+          
+          {/* Add Room Button */}
+          <button 
+            className="btn secondary"
+            onClick={() => navigate('/rooms/add')}
+            aria-label="Add a new room"
+          >
+            Add Room
+          </button>
+          
+          {/* Configure Rooms Button */}
+          <button className="btn secondary quick-action-btn" onClick={() => navigate('/rooms/configure')}>
             <div className="quick-action-icon">
               <Settings size={24} color="#4caf50" />
             </div>
