@@ -15,7 +15,11 @@
       "default",
       {
         "ignore": [
-          "accent-color"
+          "accent-color",
+          "text-size-adjust",
+          "-webkit-overflow-scrolling",
+          "scroll-behavior",
+          "scroll-behavior: smooth"
         ]
       }
     ]

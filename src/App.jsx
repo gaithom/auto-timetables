@@ -3,7 +3,7 @@
  * It includes a sidebar navigation and theme toggling functionality.
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import { TimetableProvider } from "./context/TimetableContext";
 import "./styles/theme.css";
@@ -33,6 +33,25 @@ export default function App() {
     const savedTheme = localStorage.getItem("theme");
     return savedTheme === 'light' ? 'light' : 'dark'; // Ensure only 'light' or 'dark'
   });
+  
+  // State for mobile sidebar visibility
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const sidebarRef = useRef(null);
+  
+  // Close sidebar when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target) && 
+          !event.target.closest('.mobile-menu-button')) {
+        setIsSidebarOpen(false);
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Theme configuration with color tokens for both light and dark modes
   const themeTokens = {
@@ -89,6 +108,11 @@ export default function App() {
   // Get the current theme tokens based on the selected theme
   const currentTheme = themeTokens[theme] || themeTokens.dark;
 
+  // Toggle sidebar on mobile
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     // Wrap the app with TimetableProvider to provide timetable data to all components
     <TimetableProvider>
@@ -97,17 +121,82 @@ export default function App() {
           display: "flex",
           minHeight: "100vh",
           backgroundColor: currentTheme.mainBg,
-          color: currentTheme.text
+          color: currentTheme.text,
+          position: 'relative',
+          paddingLeft: '0',
+          '@media (max-width: 768px)': {
+            paddingLeft: '0',
+          },
         }}>
+          {/* Mobile menu button */}
+          <button 
+            className="mobile-menu-button"
+            onClick={toggleSidebar}
+            style={{
+              display: 'none',
+              position: 'fixed',
+              top: '1rem',
+              left: '1rem',
+              zIndex: 110,
+              background: 'var(--secondary)',
+              border: 'none',
+              borderRadius: '4px',
+              padding: '8px',
+              cursor: 'pointer',
+              '@media (max-width: 768px)': {
+                display: 'block',
+              },
+            }}
+            aria-label="Toggle menu"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          
+          {/* Overlay for mobile */}
+          {isSidebarOpen && (
+            <div 
+              className="overlay"
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                zIndex: 99,
+                '@media (min-width: 769px)': {
+                  display: 'none',
+                },
+              }}
+              onClick={toggleSidebar}
+            />
+          )}
           {/* Sidebar */}
-          <aside style={{
-            width: 250,
-            backgroundColor: currentTheme.sidebarBg,
-            borderRight: `1px solid ${currentTheme.sidebarBorder}`,
-            padding: '20px 0',
-            display: 'flex',
-            flexDirection: 'column'
-          }}>
+          <aside 
+            ref={sidebarRef}
+            style={{
+              width: 250,
+              backgroundColor: currentTheme.sidebarBg,
+              borderRight: `1px solid ${currentTheme.sidebarBorder}`,
+              padding: '20px 0',
+              display: 'flex',
+              flexDirection: 'column',
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              bottom: 0,
+              zIndex: 100,
+              transition: 'transform 0.3s ease-in-out',
+              '@media (max-width: 768px)': {
+                transform: isSidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+                boxShadow: isSidebarOpen ? '2px 0 10px rgba(0, 0, 0, 0.2)' : 'none',
+              },
+            }}
+          >
             <div style={{ padding: '0 16px 20px' }}>
               <h2 style={{ 
                 marginBottom: 32, 
@@ -175,8 +264,17 @@ export default function App() {
           <main style={{
             flex: 1,
             padding: '20px',
+            paddingTop: '60px', // Add space for mobile menu button
             overflow: 'auto',
-            backgroundColor: currentTheme.mainBg
+            backgroundColor: currentTheme.mainBg,
+            marginLeft: '250px', // Offset for fixed sidebar
+            width: 'calc(100% - 250px)', // Adjust width for sidebar
+            '@media (max-width: 768px)': {
+              marginLeft: '0',
+              width: '100%',
+              padding: '20px',
+              paddingTop: '70px',
+            },
           }}>
             <Routes>
               <Route path="/" element={<DashboardPage />} />

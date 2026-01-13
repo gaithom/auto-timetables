@@ -88,11 +88,14 @@ export default function EnhancedDashboard() {
 
   return (
     <div className="page active" style={{ 
-      padding: '2rem',
+      padding: '1rem',
       maxWidth: '1400px',
       margin: '0 auto',
       width: '100%',
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      '@media (min-width: 768px)': {
+        padding: '2rem',
+      },
     }}>
       {/* Page Header */}
       <div className="card" style={{ 
@@ -153,8 +156,12 @@ export default function EnhancedDashboard() {
       <div className="grid" style={{ 
         display: 'grid', 
         gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', 
-        gap: '1.5rem', 
-        marginBottom: '2rem'
+        gap: '1rem', 
+        marginBottom: '1.5rem',
+        '@media (max-width: 768px)': {
+          gridTemplateColumns: '1fr',
+          gap: '0.75rem',
+        },
       }}>
         {statCards.map((stat, index) => (
           <div 
@@ -232,255 +239,344 @@ export default function EnhancedDashboard() {
         background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
         border: '1px solid rgba(255, 255, 255, 0.05)'
       }}>
-        <h2 style={{ 
-          margin: '0 0 1.5rem', 
-          color: 'var(--text-primary)',
-          fontSize: '1.5rem',
-          fontWeight: 600,
-          letterSpacing: '-0.01em'
-        }}>
-          Quick Actions
-        </h2>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-          gap: '1.5rem'
-        }}>
-          {/* Add New Program Button */}
-          <button 
-            className="quick-action-btn"
-            onClick={() => navigate('/programs')}
-            aria-label="Go to Programs to add a new program"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '1.75rem 1.5rem',
-              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.05)',
-              borderRadius: '12px',
-              cursor: 'pointer',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              minHeight: '160px',
-              position: 'relative',
-              overflow: 'hidden'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.2)';
-              e.currentTarget.style.borderColor = 'var(--secondary)';
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)';
-            }}
-          >
-            <div style={{
-              width: '60px',
-              height: '60px',
-              borderRadius: '16px',
-              backgroundColor: 'rgba(59, 130, 246, 0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '1.25rem',
-              border: '1px solid rgba(59, 130, 246, 0.2)',
-              boxShadow: '0 0 0 4px rgba(59, 130, 246, 0.05)'
-            }}>
-              <Plus size={28} color="var(--secondary)" />
-            </div>
-            <h3 style={{ 
-              margin: 0, 
-              color: 'var(--text-primary)', 
-              fontSize: '1.1rem',
-              fontWeight: 600,
-              textAlign: 'center',
-              lineHeight: '1.4'
-            }}>
-              Add New Program
-            </h3>
-          </button>
+        <div style={{ marginTop: '2rem' }}>
+          <h2 style={{ 
+            fontSize: '1.25rem', 
+            fontWeight: '600', 
+            marginBottom: '1.25rem',
+            color: 'var(--text-primary)',
+            '@media (min-width: 768px)': {
+              fontSize: '1.5rem',
+              marginBottom: '1.5rem',
+            },
+          }}>
+            Quick Actions
+          </h2>
           
-          {/* Add Lecturer Button */}
-          <button 
-            className="quick-action-btn"
-            onClick={() => navigate('/lecturers')}
-            aria-label="Go to Lecturers to add a new lecturer"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '1.75rem 1.5rem',
-              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.05)',
-              borderRadius: '12px',
-              cursor: 'pointer',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              minHeight: '160px',
-              position: 'relative',
-              overflow: 'hidden'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.2)';
-              e.currentTarget.style.borderColor = 'var(--secondary)';
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)';
-            }}
-          >
-            <div style={{
-              width: '60px',
-              height: '60px',
-              borderRadius: '16px',
-              backgroundColor: 'rgba(16, 185, 129, 0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '1.25rem',
-              border: '1px solid rgba(16, 185, 129, 0.2)',
-              boxShadow: '0 0 0 4px rgba(16, 185, 129, 0.05)'
-            }}>
-              <UserPlus size={28} color="#10b981" />
-            </div>
-            <h3 style={{ 
-              margin: 0, 
-              color: 'var(--text-primary)', 
-              fontSize: '1.1rem',
-              fontWeight: 600,
-              textAlign: 'center',
-              lineHeight: '1.4'
-            }}>
-              Add Lecturer
-            </h3>
-          </button>
-          
-          {/* Add Room Button */}
-          <button 
-            className="quick-action-btn"
-            onClick={() => navigate('/rooms')}
-            aria-label="Go to Rooms to add a new room"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '1.75rem 1.5rem',
-              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.05)',
-              borderRadius: '12px',
-              cursor: 'pointer',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              minHeight: '160px',
-              position: 'relative',
-              overflow: 'hidden'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.2)';
-              e.currentTarget.style.borderColor = 'var(--secondary)';
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)';
-            }}
-          >
-            <div style={{
-              width: '60px',
-              height: '60px',
-              borderRadius: '16px',
-              backgroundColor: 'rgba(245, 158, 11, 0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '1.25rem',
-              border: '1px solid rgba(245, 158, 11, 0.2)',
-              boxShadow: '0 0 0 4px rgba(245, 158, 11, 0.05)'
-            }}>
-              <DoorOpen size={28} color="#f59e0b" />
-            </div>
-            <h3 style={{ 
-              margin: 0, 
-              color: 'var(--text-primary)', 
-              fontSize: '1.1rem',
-              fontWeight: 600,
-              textAlign: 'center',
-              lineHeight: '1.4'
-            }}>
-              Add Room
-            </h3>
-          </button>
-          
-          {/* Manage Rooms Button */}
-          <button 
-            className="quick-action-btn"
-            onClick={() => navigate('/rooms')}
-            aria-label="Manage rooms and room settings"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '1.75rem 1.5rem',
-              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.05)',
-              borderRadius: '12px',
-              cursor: 'pointer',
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              minHeight: '160px',
-              position: 'relative',
-              overflow: 'hidden'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.2)';
-              e.currentTarget.style.borderColor = 'var(--secondary)';
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)';
-            }}
-          >
-            <div style={{
-              width: '60px',
-              height: '60px',
-              borderRadius: '16px',
-              backgroundColor: 'rgba(139, 92, 246, 0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '1.25rem',
-              border: '1px solid rgba(139, 92, 246, 0.2)',
-              boxShadow: '0 0 0 4px rgba(139, 92, 246, 0.05)'
-            }}>
-              <Settings size={28} color="#8b5cf6" />
-            </div>
-            <h3 style={{ 
-              margin: 0, 
-              color: 'var(--text-primary)', 
-              fontSize: '1.1rem',
-              fontWeight: 600,
-              textAlign: 'center',
-              lineHeight: '1.4'
-            }}>
-              Manage Rooms
-            </h3>
-          </button>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+            gap: '1rem',
+            marginTop: '1rem',
+            '@media (max-width: 640px)': {
+              gridTemplateColumns: '1fr 1fr',
+            },
+            '@media (max-width: 480px)': {
+              gridTemplateColumns: '1fr',
+            },
+          }}>
+            {/* Add New Program Button */}
+            <button 
+              className="quick-action-btn"
+              onClick={() => {
+                navigate('/programs');
+                // Close sidebar on mobile after navigation
+                if (window.innerWidth <= 768) {
+                  document.querySelector('.mobile-menu-button')?.click();
+                }
+              }}
+              aria-label="Go to Programs to add a new program"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '1.25rem 1rem',
+                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
+                border: '1px solid rgba(255, 255, 255, 0.05)',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                minHeight: '140px',
+                position: 'relative',
+                overflow: 'hidden',
+                '@media (min-width: 768px)': {
+                  padding: '1.75rem 1.5rem',
+                  minHeight: '160px',
+                },
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.2)';
+                e.currentTarget.style.borderColor = 'var(--secondary)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)';
+              }}
+            >
+              <div style={{
+                width: '50px',
+                height: '50px',
+                borderRadius: '14px',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '1rem',
+                border: '1px solid rgba(59, 130, 246, 0.2)',
+                boxShadow: '0 0 0 4px rgba(59, 130, 246, 0.05)',
+                '@media (min-width: 768px)': {
+                  width: '60px',
+                  height: '60px',
+                  borderRadius: '16px',
+                  marginBottom: '1.25rem',
+                },
+              }}>
+                <Plus size={28} color="var(--secondary)" />
+              </div>
+              <h3 style={{ 
+                margin: 0, 
+                color: 'var(--text-primary)', 
+                fontSize: '1rem',
+                fontWeight: 600,
+                textAlign: 'center',
+                lineHeight: '1.4',
+                '@media (min-width: 768px)': {
+                  fontSize: '1.1rem',
+                },
+              }}>
+                Add New Program
+              </h3>
+            </button>
+            
+            {/* Add Lecturer Button */}
+            <button 
+              className="quick-action-btn"
+              onClick={() => {
+                navigate('/lecturers');
+                // Close sidebar on mobile after navigation
+                if (window.innerWidth <= 768) {
+                  document.querySelector('.mobile-menu-button')?.click();
+                }
+              }}
+              aria-label="Go to Lecturers to add a new lecturer"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '1.25rem 1rem',
+                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
+                border: '1px solid rgba(255, 255, 255, 0.05)',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                minHeight: '140px',
+                position: 'relative',
+                overflow: 'hidden',
+                '@media (min-width: 768px)': {
+                  padding: '1.75rem 1.5rem',
+                  minHeight: '160px',
+                },
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.2)';
+                e.currentTarget.style.borderColor = 'var(--secondary)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)';
+              }}
+            >
+              <div style={{
+                width: '50px',
+                height: '50px',
+                borderRadius: '14px',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '1rem',
+                border: '1px solid rgba(16, 185, 129, 0.2)',
+                boxShadow: '0 0 0 4px rgba(16, 185, 129, 0.05)',
+                '@media (min-width: 768px)': {
+                  width: '60px',
+                  height: '60px',
+                  borderRadius: '16px',
+                  marginBottom: '1.25rem',
+                },
+              }}>
+                <UserPlus size={28} color="#10b981" />
+              </div>
+              <h3 style={{ 
+                margin: 0, 
+                color: 'var(--text-primary)', 
+                fontSize: '1rem',
+                fontWeight: 600,
+                textAlign: 'center',
+                lineHeight: '1.4',
+                '@media (min-width: 768px)': {
+                  fontSize: '1.1rem',
+                },
+              }}>
+                Add Lecturer
+              </h3>
+            </button>
+            
+            {/* Add Room Button */}
+            <button 
+              className="quick-action-btn"
+              onClick={() => {
+                navigate('/rooms');
+                // Close sidebar on mobile after navigation
+                if (window.innerWidth <= 768) {
+                  document.querySelector('.mobile-menu-button')?.click();
+                }
+              }}
+              aria-label="Go to Rooms to add a new room"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '1.25rem 1rem',
+                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
+                border: '1px solid rgba(255, 255, 255, 0.05)',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                minHeight: '140px',
+                position: 'relative',
+                overflow: 'hidden',
+                '@media (min-width: 768px)': {
+                  padding: '1.75rem 1.5rem',
+                  minHeight: '160px',
+                },
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.2)';
+                e.currentTarget.style.borderColor = 'var(--secondary)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)';
+              }}
+            >
+              <div style={{
+                width: '50px',
+                height: '50px',
+                borderRadius: '14px',
+                backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '1rem',
+                border: '1px solid rgba(245, 158, 11, 0.2)',
+                boxShadow: '0 0 0 4px rgba(245, 158, 11, 0.05)',
+                '@media (min-width: 768px)': {
+                  width: '60px',
+                  height: '60px',
+                  borderRadius: '16px',
+                  marginBottom: '1.25rem',
+                },
+              }}>
+                <DoorOpen size={28} color="#f59e0b" />
+              </div>
+              <h3 style={{ 
+                margin: 0, 
+                color: 'var(--text-primary)', 
+                fontSize: '1rem',
+                fontWeight: 600,
+                textAlign: 'center',
+                lineHeight: '1.4',
+                '@media (min-width: 768px)': {
+                  fontSize: '1.1rem',
+                },
+              }}>
+                Add Room
+              </h3>
+            </button>
+            
+            {/* Manage Rooms Button */}
+            <button 
+              className="quick-action-btn"
+              onClick={() => {
+                navigate('/rooms');
+                // Close sidebar on mobile after navigation
+                if (window.innerWidth <= 768) {
+                  document.querySelector('.mobile-menu-button')?.click();
+                }
+              }}
+              aria-label="Manage rooms and room settings"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '1.25rem 1rem',
+                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
+                border: '1px solid rgba(255, 255, 255, 0.05)',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                minHeight: '140px',
+                position: 'relative',
+                overflow: 'hidden',
+                '@media (min-width: 768px)': {
+                  padding: '1.75rem 1.5rem',
+                  minHeight: '160px',
+                },
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.2)';
+                e.currentTarget.style.borderColor = 'var(--secondary)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)';
+              }}
+            >
+              <div style={{
+                width: '50px',
+                height: '50px',
+                borderRadius: '14px',
+                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '1rem',
+                border: '1px solid rgba(139, 92, 246, 0.2)',
+                boxShadow: '0 0 0 4px rgba(139, 92, 246, 0.05)',
+                '@media (min-width: 768px)': {
+                  width: '60px',
+                  height: '60px',
+                  borderRadius: '16px',
+                  marginBottom: '1.25rem',
+                },
+              }}>
+                <Settings size={28} color="#8b5cf6" />
+              </div>
+              <h3 style={{ 
+                margin: 0, 
+                color: 'var(--text-primary)', 
+                fontSize: '1rem',
+                fontWeight: 600,
+                textAlign: 'center',
+                lineHeight: '1.4',
+                '@media (min-width: 768px)': {
+                  fontSize: '1.1rem',
+                },
+              }}>
+                Manage Rooms
+              </h3>
+            </button>
+          </div>
         </div>
       </div>
     </div>
