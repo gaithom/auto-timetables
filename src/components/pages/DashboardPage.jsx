@@ -58,148 +58,428 @@ export default function EnhancedDashboard() {
     };
   }, [programs, lecturers, rooms, timetable]);
 
+  // Statistics cards data
+  const statCards = [
+    {
+      title: 'Total Programs',
+      value: stats.totalPrograms,
+      icon: <BookOpen />,
+      color: 'var(--secondary)'
+    },
+    {
+      title: 'Total Courses',
+      value: stats.totalCourses,
+      icon: <BookOpen />,
+      color: 'var(--success)'
+    },
+    {
+      title: 'Total Lecturers',
+      value: stats.totalLecturers,
+      icon: <Users />,
+      color: 'var(--warning)'
+    },
+    {
+      title: 'Total Rooms',
+      value: stats.totalRooms,
+      icon: <DoorOpen />,
+      color: 'var(--info)'
+    }
+  ];
+
   return (
-    <div className="page active">
+    <div className="page active" style={{ 
+      padding: '2rem',
+      maxWidth: '1400px',
+      margin: '0 auto',
+      width: '100%',
+      boxSizing: 'border-box'
+    }}>
       {/* Page Header */}
-      <div style={{ marginBottom: '32px' }}>
-        <h1>Dashboard</h1>
-        <p>Welcome to Timetable Forge - Manage your academic scheduling</p>
-        
-        <button 
-          onClick={() => navigate("/timetables")}
-          className="btn btn-primary"
-          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
-        >
-          <Calendar size={16} />
-          View Timetable
-        </button>
+      <div className="card" style={{ 
+        marginBottom: '2rem',
+        background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
+        border: '1px solid rgba(255, 255, 255, 0.05)'
+      }}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '1rem'
+        }}>
+          <div>
+            <h1 style={{ 
+              margin: 0, 
+              color: 'var(--text-primary)',
+              fontSize: '1.75rem',
+              fontWeight: 700,
+              letterSpacing: '-0.025em',
+              marginBottom: '0.5rem'
+            }}>
+              Dashboard
+            </h1>
+            <p style={{ 
+              margin: 0, 
+              color: 'var(--text-secondary)',
+              fontSize: '1rem',
+              maxWidth: '600px',
+              lineHeight: '1.6'
+            }}>
+              Welcome to Timetable Forge - Manage your academic scheduling and optimize your institution's timetable
+            </p>
+          </div>
+          <button 
+            onClick={() => navigate("/timetables")}
+            className="btn btn-primary"
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px',
+              padding: '0.6rem 1.25rem',
+              fontSize: '0.95rem',
+              borderRadius: '8px',
+              transition: 'all 0.2s ease',
+              minWidth: '160px',
+              justifyContent: 'center'
+            }}
+          >
+            <Calendar size={18} />
+            View Timetable
+          </button>
+        </div>
       </div>
 
-      {/* Statistics Cards */}
-      <div className="stats-grid">
-        {/* Total Programs Card */}
-        <div className="stat-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <BookOpen size={20} color="#4caf50" />
-              </div>
-              <h3>Total Programs</h3>
-              <div className="stat-number">{stats.totalPrograms}</div>
-              <div className="stat-description">Active academic programs</div>
+      {/* Statistics Grid */}
+      <div className="grid" style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', 
+        gap: '1.5rem', 
+        marginBottom: '2rem'
+      }}>
+        {statCards.map((stat, index) => (
+          <div 
+            className="card" 
+            key={index} 
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '1.25rem',
+              position: 'relative',
+              overflow: 'hidden',
+              border: '1px solid rgba(255, 255, 255, 0.05)',
+              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
+              backdropFilter: 'blur(8px)',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer',
+              padding: '1.25rem',
+              borderRadius: '12px'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+            }}
+          >
+            <div style={{ 
+              width: '56px', 
+              height: '56px', 
+              borderRadius: '12px',
+              background: `${stat.color}15`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              border: `1px solid ${stat.color}20`,
+              boxShadow: `0 0 0 4px ${stat.color}10`,
+              transition: 'all 0.3s ease'
+            }}>
+              {React.cloneElement(stat.icon, { 
+                size: 24,
+                style: { color: stat.color }
+              })}
             </div>
-            <div className="stat-icon">
-              <BookOpen size={28} color="#4caf50" />
+            <div style={{ overflow: 'hidden' }}>
+              <div style={{ 
+                fontSize: '0.875rem', 
+                color: 'var(--text-secondary)',
+                marginBottom: '0.25rem',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}>
+                {stat.title}
+              </div>
+              <div style={{ 
+                fontSize: '1.5rem', 
+                fontWeight: '700',
+                color: 'var(--text-primary)',
+                lineHeight: '1.2',
+                letterSpacing: '-0.02em'
+              }}>
+                {stat.value}
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Active Courses Card */}
-        <div className="stat-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                <Calendar size={20} color="#4caf50" />
-              </div>
-              <h3>Active Courses</h3>
-              <div className="stat-number">{stats.totalCourses}</div>
-              <div className="stat-description">Total courses across all programs</div>
-            </div>
-            <div className="stat-icon">
-              <Calendar size={28} color="#4caf50" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* System Status and Recent Activities */}
-      <div className="dashboard-grid">
-        {/* System Status Card */}
-        <div className="form-container">
-          <h2>System Status</h2>
-          <p>Current scheduling system health</p>
-          
-          {/* Conflict Detection */}
-          <div className="status-card success">
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <CheckCircle size={20} color="#4caf50" />
-                <div>
-                  <h4>Conflict Detection</h4>
-                  <div>All systems operational</div>
-                </div>
-              </div>
-              <div className="status-badge active">
-                Active
-              </div>
-            </div>
-          </div>
-
-          {/* Schedule Generator */}
-          <div className="status-card info">
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Calendar size={20} color="#4caf50" />
-                <div>
-                  <h4>Schedule Generator</h4>
-                  <div>Ready for new assignments</div>
-                </div>
-              </div>
-              <div className="status-badge ready">
-                Ready
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Recent Activities Card */}
-        <div className="form-container">
-          <h2>Recent Activities</h2>
-          <p>Latest system updates and notifications</p>
-          
-          <div className="activities-list">
-            
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* Quick Actions Section */}
-      <div className="quick-actions">
-        <h2>Quick Actions</h2>
-        <div className="action-buttons">
+      <div className="card" style={{ 
+        marginBottom: '2rem',
+        background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
+        border: '1px solid rgba(255, 255, 255, 0.05)'
+      }}>
+        <h2 style={{ 
+          margin: '0 0 1.5rem', 
+          color: 'var(--text-primary)',
+          fontSize: '1.5rem',
+          fontWeight: 600,
+          letterSpacing: '-0.01em'
+        }}>
+          Quick Actions
+        </h2>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+          gap: '1.5rem'
+        }}>
           {/* Add New Program Button */}
           <button 
-            className="btn primary" 
-            onClick={() => navigate('/programs/add')}
-            aria-label="Add a new academic program"
+            className="quick-action-btn"
+            onClick={() => navigate('/programs')}
+            aria-label="Go to Programs to add a new program"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '1.75rem 1.5rem',
+              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
+              border: '1px solid rgba(255, 255, 255, 0.05)',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              minHeight: '160px',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.2)';
+              e.currentTarget.style.borderColor = 'var(--secondary)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)';
+            }}
           >
-            Add New Program
+            <div style={{
+              width: '60px',
+              height: '60px',
+              borderRadius: '16px',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '1.25rem',
+              border: '1px solid rgba(59, 130, 246, 0.2)',
+              boxShadow: '0 0 0 4px rgba(59, 130, 246, 0.05)'
+            }}>
+              <Plus size={28} color="var(--secondary)" />
+            </div>
+            <h3 style={{ 
+              margin: 0, 
+              color: 'var(--text-primary)', 
+              fontSize: '1.1rem',
+              fontWeight: 600,
+              textAlign: 'center',
+              lineHeight: '1.4'
+            }}>
+              Add New Program
+            </h3>
           </button>
           
           {/* Add Lecturer Button */}
           <button 
-            className="btn secondary"
-            onClick={() => navigate('/lecturers/add')}
-            aria-label="Add a new lecturer"
+            className="quick-action-btn"
+            onClick={() => navigate('/lecturers')}
+            aria-label="Go to Lecturers to add a new lecturer"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '1.75rem 1.5rem',
+              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
+              border: '1px solid rgba(255, 255, 255, 0.05)',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              minHeight: '160px',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.2)';
+              e.currentTarget.style.borderColor = 'var(--secondary)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)';
+            }}
           >
-            Add Lecturer
+            <div style={{
+              width: '60px',
+              height: '60px',
+              borderRadius: '16px',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '1.25rem',
+              border: '1px solid rgba(16, 185, 129, 0.2)',
+              boxShadow: '0 0 0 4px rgba(16, 185, 129, 0.05)'
+            }}>
+              <UserPlus size={28} color="#10b981" />
+            </div>
+            <h3 style={{ 
+              margin: 0, 
+              color: 'var(--text-primary)', 
+              fontSize: '1.1rem',
+              fontWeight: 600,
+              textAlign: 'center',
+              lineHeight: '1.4'
+            }}>
+              Add Lecturer
+            </h3>
           </button>
           
           {/* Add Room Button */}
           <button 
-            className="btn secondary"
-            onClick={() => navigate('/rooms/add')}
-            aria-label="Add a new room"
+            className="quick-action-btn"
+            onClick={() => navigate('/rooms')}
+            aria-label="Go to Rooms to add a new room"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '1.75rem 1.5rem',
+              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
+              border: '1px solid rgba(255, 255, 255, 0.05)',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              minHeight: '160px',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.2)';
+              e.currentTarget.style.borderColor = 'var(--secondary)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)';
+            }}
           >
-            Add Room
+            <div style={{
+              width: '60px',
+              height: '60px',
+              borderRadius: '16px',
+              backgroundColor: 'rgba(245, 158, 11, 0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '1.25rem',
+              border: '1px solid rgba(245, 158, 11, 0.2)',
+              boxShadow: '0 0 0 4px rgba(245, 158, 11, 0.05)'
+            }}>
+              <DoorOpen size={28} color="#f59e0b" />
+            </div>
+            <h3 style={{ 
+              margin: 0, 
+              color: 'var(--text-primary)', 
+              fontSize: '1.1rem',
+              fontWeight: 600,
+              textAlign: 'center',
+              lineHeight: '1.4'
+            }}>
+              Add Room
+            </h3>
           </button>
           
-          {/* Configure Rooms Button */}
-          <button className="btn secondary quick-action-btn" onClick={() => navigate('/rooms/configure')}>
-            <div className="quick-action-icon">
-              <Settings size={24} color="#4caf50" />
+          {/* Manage Rooms Button */}
+          <button 
+            className="quick-action-btn"
+            onClick={() => navigate('/rooms')}
+            aria-label="Manage rooms and room settings"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '1.75rem 1.5rem',
+              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)',
+              border: '1px solid rgba(255, 255, 255, 0.05)',
+              borderRadius: '12px',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              minHeight: '160px',
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.2)';
+              e.currentTarget.style.borderColor = 'var(--secondary)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%)';
+            }}
+          >
+            <div style={{
+              width: '60px',
+              height: '60px',
+              borderRadius: '16px',
+              backgroundColor: 'rgba(139, 92, 246, 0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '1.25rem',
+              border: '1px solid rgba(139, 92, 246, 0.2)',
+              boxShadow: '0 0 0 4px rgba(139, 92, 246, 0.05)'
+            }}>
+              <Settings size={28} color="#8b5cf6" />
             </div>
-            <h3>Configure Rooms</h3>
+            <h3 style={{ 
+              margin: 0, 
+              color: 'var(--text-primary)', 
+              fontSize: '1.1rem',
+              fontWeight: 600,
+              textAlign: 'center',
+              lineHeight: '1.4'
+            }}>
+              Manage Rooms
+            </h3>
           </button>
         </div>
       </div>

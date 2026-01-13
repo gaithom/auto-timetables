@@ -6,7 +6,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import { TimetableProvider } from "./context/TimetableContext";
-import "./styles/theme.css";
 import {
   LayoutDashboard,
   BookOpen,
@@ -64,6 +63,9 @@ export default function App() {
     },
   };
 
+  // Get the current theme tokens
+  const currentTheme = themeTokens[theme] || themeTokens.dark;
+
   // Update the document body class and save theme preference when theme changes
   useEffect(() => {
     document.body.classList.remove("theme-dark", "theme-light");
@@ -86,97 +88,110 @@ export default function App() {
     { path: "/timetables", label: "Timetables", icon: <Calendar size={18} /> },
   ];
 
-  // Get the current theme tokens based on the selected theme
-  const currentTheme = themeTokens[theme] || themeTokens.dark;
-
   return (
     // Wrap the app with TimetableProvider to provide timetable data to all components
     <TimetableProvider>
+      {/* Set up client-side routing */}
       <Router>
         <div style={{
           display: "flex",
           minHeight: "100vh",
-          backgroundColor: currentTheme.mainBg,
-          color: currentTheme.text
+          background: currentTheme.appBg,
+          color: currentTheme.text,
         }}>
           {/* Sidebar */}
           <aside style={{
-            width: 250,
-            backgroundColor: currentTheme.sidebarBg,
+            width: 240,
+            padding: "24px 16px",
             borderRight: `1px solid ${currentTheme.sidebarBorder}`,
-            padding: '20px 0',
-            display: 'flex',
-            flexDirection: 'column'
+            background: currentTheme.sidebarBg,
+            display: "flex",
+            flexDirection: "column",
+            gap: 24,
           }}>
-            <div style={{ padding: '0 16px 20px' }}>
-              <h2 style={{ 
-                marginBottom: 32, 
-                fontWeight: "bold", 
-                fontSize: 18, 
-                color: "#4caf50",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px"
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 24,
+              padding: "0 8px"
+            }}>
+              <Calendar size={24} style={{ color: "#4caf50" }} />
+              <h1 style={{
+                fontSize: 20,
+                fontWeight: 600,
+                color: currentTheme.text,
+                margin: 0
               }}>
-                <Calendar size={20} />
                 Auto Timetable
-              </h2>
-              
-              <button
-                onClick={handleToggleTheme}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 12px',
-                  borderRadius: 6,
-                  border: `1px solid ${currentTheme.toggleBorder}`,
-                  backgroundColor: currentTheme.toggleBg,
-                  color: currentTheme.toggleText,
-                  cursor: 'pointer',
-                  width: '100%',
-                  justifyContent: 'center'
-                }}
-              >
-                {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-                {theme === "dark" ? "Light Mode" : "Dark Mode"}
-              </button>
+              </h1>
             </div>
 
-            <nav style={{ flex: 1 }}>
+            <nav style={{ display: "flex", flexDirection: "column", gap: 4 }}>
               {navItems.map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}
                   style={({ isActive }) => ({
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '10px 16px',
-                    margin: '4px 16px',
-                    borderRadius: 6,
-                    textDecoration: 'none',
-                    color: isActive ? currentTheme.navActiveBorder : currentTheme.navInactive,
-                    backgroundColor: isActive ? currentTheme.navActiveBg : 'transparent',
-                    border: isActive ? `1px solid ${currentTheme.navActiveBorder}` : '1px solid transparent',
-                    transition: 'all 0.2s',
-                    '&:hover': {
-                      backgroundColor: isActive ? currentTheme.navActiveBg : 'rgba(0,0,0,0.05)'
-                    }
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    padding: "10px 12px",
+                    borderRadius: 8,
+                    fontWeight: 500,
+                    background: isActive ? currentTheme.navActiveBg : "transparent",
+                    color: isActive ? currentTheme.text : currentTheme.navInactive,
+                    textDecoration: "none",
+                    transition: "all 0.2s ease",
+                    border: isActive 
+                      ? `1px solid ${currentTheme.navActiveBorder}`
+                      : "1px solid transparent",
                   })}
                 >
-                  <span style={{ marginRight: 12 }}>{item.icon}</span>
+                  {React.cloneElement(item.icon, { size: 18 })}
                   {item.label}
                 </NavLink>
               ))}
             </nav>
+
+            <div style={{ marginTop: "auto" }}>
+              <button
+                onClick={handleToggleTheme}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  width: "100%",
+                  padding: "10px 12px",
+                  borderRadius: 8,
+                  border: `1px solid ${currentTheme.toggleBorder}`,
+                  background: currentTheme.toggleBg,
+                  color: currentTheme.toggleText,
+                  cursor: "pointer",
+                  fontWeight: 500,
+                }}
+              >
+                {theme === "dark" ? (
+                  <>
+                    <Sun size={18} />
+                    Light Mode
+                  </>
+                ) : (
+                  <>
+                    <Moon size={18} />
+                    Dark Mode
+                  </>
+                )}
+              </button>
+            </div>
           </aside>
 
           {/* Main Content */}
           <main style={{
             flex: 1,
-            padding: '20px',
-            overflow: 'auto',
-            backgroundColor: currentTheme.mainBg
+            padding: 24,
+            overflow: "auto",
+            background: currentTheme.mainBg,
           }}>
             <Routes>
               <Route path="/" element={<DashboardPage />} />
